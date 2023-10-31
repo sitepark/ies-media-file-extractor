@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:ns="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   width="180"
+   height="190"
+   sodipodi:docname="Sentido_Proibido.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt"
+   version="1.0">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <ns:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </ns:Work>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs5">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3226">
+      <stop
+         style="stop-color:#ececec;stop-opacity:1;"
+         offset="0"
+         id="stop3228" />
+      <stop
+         style="stop-color:#ececec;stop-opacity:0;"
+         offset="1"
+         id="stop3230" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3158">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3160" />
+      <stop
+         style="stop-color:#b40200;stop-opacity:1;"
+         offset="1"
+         id="stop3162" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3158"
+       id="linearGradient3164"
+       x1="203.81657"
+       y1="499.49756"
+       x2="308.37851"
+       y2="499.49756"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       id="filter3218">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.5545661"
+         id="feGaussianBlur3220" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3226"
+       id="linearGradient3232"
+       x1="249.25215"
+       y1="399.32388"
+       x2="249.25215"
+       y2="497.08154"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3226"
+       id="linearGradient3236"
+       gradientUnits="userSpaceOnUse"
+       x1="249.25215"
+       y1="547.29132"
+       x2="249.25215"
+       y2="411.7157" />
+    <filter
+       inkscape:collect="always"
+       id="filter3580">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="3.8053667"
+         id="feGaussianBlur3582" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3620">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.65401177"
+         id="feGaussianBlur3622" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-height="691"
+     inkscape:window-width="1181"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     showgrid="false"
+     inkscape:zoom="1.2417145"
+     inkscape:cx="237.95844"
+     inkscape:cy="84.818171"
+     inkscape:window-x="184"
+     inkscape:window-y="174"
+     inkscape:current-layer="svg2"
+     width="180px"
+     height="190px" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:#333333;fill-opacity:1;stroke:none;stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3580)"
+     id="path3426"
+     sodipodi:cx="325.3566"
+     sodipodi:cy="502.31622"
+     sodipodi:rx="79.728477"
+     sodipodi:ry="79.728477"
+     d="M 405.08508 502.31622 A 79.728477 79.728477 0 1 1  245.62812,502.31622 A 79.728477 79.728477 0 1 1  405.08508 502.31622 z"
+     transform="translate(-238.83541,-412.57368)"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:#ffffff;stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3620)"
+     id="path2382"
+     sodipodi:cx="325.3566"
+     sodipodi:cy="502.31622"
+     sodipodi:rx="79.728477"
+     sodipodi:ry="79.728477"
+     d="M 405.08508 502.31622 A 79.728477 79.728477 0 1 1  245.62812,502.31622 A 79.728477 79.728477 0 1 1  405.08508 502.31622 z"
+     transform="translate(-243.27812,-420.23775)"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient3164);stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter3218)"
+     id="path3156"
+     sodipodi:cx="256.09753"
+     sodipodi:cy="499.49756"
+     sodipodi:rx="49.930965"
+     sodipodi:ry="50.333633"
+     d="M 306.0285 499.49756 A 49.930965 50.333633 0 1 1  206.16657,499.49756 A 49.930965 50.333633 0 1 1  306.0285 499.49756 z"
+     transform="matrix(1.3312465,0,0,1.3285964,-258.44777,-581.55222)"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+  <rect
+     style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect3222"
+     width="124.82741"
+     height="29.79751"
+     x="19.704809"
+     y="69.139702"
+     ry="0"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:url(#linearGradient3232);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3224"
+     sodipodi:cx="249.25215"
+     sodipodi:cy="454.39862"
+     sodipodi:rx="39.864239"
+     sodipodi:ry="21.341461"
+     d="M 289.11639 454.39862 A 39.864239 21.341461 0 1 1  209.38791,454.39862 A 39.864239 21.341461 0 1 1  289.11639 454.39862 z"
+     transform="matrix(1.2020202,0,0,1.1698113,-217.12496,-497.80245)"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+  <path
+     sodipodi:type="arc"
+     style="opacity:1;fill:url(#linearGradient3236);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4.69999981;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3234"
+     sodipodi:cx="249.25215"
+     sodipodi:cy="454.39862"
+     sodipodi:rx="39.864239"
+     sodipodi:ry="21.341461"
+     d="M 289.11639 454.39862 A 39.864239 21.341461 0 1 1  209.38791,454.39862 A 39.864239 21.341461 0 1 1  289.11639 454.39862 z"
+     transform="matrix(0.6666667,0,0,0.2830189,-85.297629,18.304831)"
+     inkscape:export-filename="C:\Paulo\g o b y s k\GBSK-1 - Forma    o\Cursos\GBSK-1-F-INK.1\Exercicios\OpenClipArt\Sentido_proibido.png"
+     inkscape:export-xdpi="86"
+     inkscape:export-ydpi="86" />
+</svg>

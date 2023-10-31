@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.sitepark.extractor.types.DocInfo;
 
-class ExtractorTest {
+class ExtractorTest2 {
 
 	private final Extractor extractor = new Extractor();
 
@@ -25,9 +25,55 @@ class ExtractorTest {
 	}
 
 	@Test
+	void testJpg() throws Exception {
+		Path path = Paths.get("src/test/resources/files/images/Fotolia_198915619_S.jpg");
+		FileInfo fileInfo = this.extractor.extract(path);
+	}
+
+	@Test
+	void testImages() throws Exception {
+
+		Path path = Paths.get("src/test/resources/files/images");
+
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
+			for (Path file : dirStream) {
+				System.out.println("### " + file);
+				FileInfo fileInfo = this.extractor.extract(file);
+			}
+		}
+
+	}
+
+	@Test
 	void testDocuments() throws Exception {
 
 		Path path = Paths.get("src/test/resources/files/docs");
+
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
+			for (Path file : dirStream) {
+				System.out.println("### " + file);
+				FileInfo fileInfo = this.extractor.extract(file);
+			}
+		}
+	}
+
+	@Test
+	void testAudio() throws Exception {
+
+		Path path = Paths.get("src/test/resources/files/audio");
+
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
+			for (Path file : dirStream) {
+				System.out.println("### " + file);
+				FileInfo fileInfo = this.extractor.extract(file);
+			}
+		}
+	}
+
+	@Test
+	void testVideo() throws Exception {
+
+		Path path = Paths.get("src/test/resources/files/video");
 
 		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
 			for (Path file : dirStream) {
