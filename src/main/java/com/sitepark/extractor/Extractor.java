@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.tika.detect.DefaultDetector;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.exception.EncryptedDocumentException;
+import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
@@ -23,8 +27,18 @@ public class Extractor {
 
 	private final Set<MediaType> supportedMediaTypes = new HashSet<>();
 
+	private static final FileInfoFactory<?>[] DEFAULT_FACTORY_LIST = new FileInfoFactory<?>[] {
+		new DocInfoFactory()
+	};
+
 	public Extractor() {
-		this.addFileInfoFactory(new DocInfoFactory());
+		this(DEFAULT_FACTORY_LIST);
+	}
+
+	public Extractor(FileInfoFactory<?>... factoryList) {
+		for (FileInfoFactory<?> factory : factoryList) {
+			this.addFileInfoFactory(factory);
+		}
 	}
 
 	private void addFileInfoFactory(FileInfoFactory<?> factory) {
@@ -44,9 +58,15 @@ public class Extractor {
 		BodyContentHandler handler = new BodyContentHandler();
 		ParseContext context = new ParseContext();
 
-		try {
-			InputStream inputstream = Files.newInputStream(path);
+		try (
+			InputStream inputstream = TikaInputStream.get(path, metadata);
+		) {
 			parser.parse(inputstream, handler, metadata, context);
+		} catch (EncryptedDocumentException e) { //NOPMD
+			/*
+			 * If the document is encrypted we take the data we can get.
+			 * That should be enough for us.
+			 */
 		} catch (Throwable t) {
 			throw new ExtractionException(t.getMessage(), t);
 		}
@@ -55,7 +75,7 @@ public class Extractor {
 	}
 
 	private FileInfo toFileInfo(Metadata metadata, BodyContentHandler handler)
-			throws ExtractionException {
+			throws ExtractionException, UnsupportedMediaTypeException {
 
 		MediaType mediaType = MediaType.parse(metadata.get("Content-Type"));
 		if (mediaType == null) {
@@ -63,11 +83,12 @@ public class Extractor {
 		}
 
 		FileInfoFactory<?> factory = this.getFileInfoFactory(mediaType);
-		return factory.create(metadata, handler.toString());
+		String extractedContent = handler.toString();
+		return factory.create(metadata, extractedContent);
 	}
 
 	private FileInfoFactory<?> getFileInfoFactory(MediaType mediaType)
-			throws ExtractionException {
+			throws UnsupportedMediaTypeException {
 
 		for (FileInfoFactory<?> factory : this.factoryList) {
 			if (factory.getSupportedTypes().contains(mediaType)) {
@@ -75,6 +96,6 @@ public class Extractor {
 			}
 		}
 
-		throw new ExtractionException("No factory for mediaType " + mediaType);
+		throw new UnsupportedMediaTypeException("No factory for mediaType " + mediaType);
 	}
 }

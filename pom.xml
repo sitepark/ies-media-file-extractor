@@ -69,6 +69,12 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.15.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
 			<version>${tika.version}</version>
@@ -121,6 +127,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -140,7 +151,16 @@
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>
 			<version>3.15.2</version>
+			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.jparams</groupId>
+			<artifactId>to-string-verifier</artifactId>
+			<version>1.4.8</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<testResources>

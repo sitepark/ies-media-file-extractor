@@ -41,12 +41,13 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 
 	@Override
 	public DocInfo create(Metadata metadata, String extractedContent) {
-		return new DocInfo(
-				this.getTitle(metadata),
-				this.getDescription(metadata),
-				this.getCreationDate(metadata),
-				this.getLastModifiedDate(metadata),
-				extractedContent);
+		return DocInfo.builder()
+				.title(this.getTitle(metadata))
+				.description(this.getDescription(metadata))
+				.creationDate(this.getCreationDate(metadata))
+				.lastModificationDate(this.getLastModifiedDate(metadata))
+				.extractedContent(extractedContent)
+				.build();
 	}
 
 	private String getTitle(Metadata metadata) {
