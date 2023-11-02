@@ -10,6 +10,7 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class DocInfoTest {
 
 	@Test
@@ -31,7 +32,7 @@ class DocInfoTest {
 		DocInfo docInfo = DocInfo.builder()
 				.title("title")
 				.build();
-		assertEquals("title", docInfo.getTitle());
+		assertEquals("title", docInfo.getTitle(), "unexpected title");
 	}
 
 	@Test
@@ -39,7 +40,7 @@ class DocInfoTest {
 		DocInfo docInfo = DocInfo.builder()
 				.description("description")
 				.build();
-		assertEquals("description", docInfo.getDescription());
+		assertEquals("description", docInfo.getDescription(), "unexpected description");
 	}
 
 	@Test
@@ -47,7 +48,7 @@ class DocInfoTest {
 		DocInfo docInfo = DocInfo.builder()
 				.creationDate(123L)
 				.build();
-		assertEquals(123L, docInfo.getCreationDate());
+		assertEquals(123L, docInfo.getCreationDate(), "unexpected creationDate");
 	}
 
 	@Test
@@ -55,7 +56,7 @@ class DocInfoTest {
 		DocInfo docInfo = DocInfo.builder()
 				.lastModificationDate(123L)
 				.build();
-		assertEquals(123L, docInfo.getLastModificationDate());
+		assertEquals(123L, docInfo.getLastModificationDate(), "unexpected lastModificationDate");
 	}
 
 	@Test
@@ -63,7 +64,7 @@ class DocInfoTest {
 		DocInfo docInfo = DocInfo.builder()
 				.extractedContent("abc")
 				.build();
-		assertEquals("abc", docInfo.getExtractedContent());
+		assertEquals("abc", docInfo.getExtractedContent(), "unexpected extractedContent");
 	}
 
 	@Test
