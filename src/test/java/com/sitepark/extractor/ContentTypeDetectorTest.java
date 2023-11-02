@@ -19,6 +19,6 @@ class ContentTypeDetectorTest {
 
 		String contentType = detector.detect(path);
 
-		assertEquals("application/pdf", contentType);
+		assertEquals("application/pdf", contentType, "unexpected content-type");
 	}
 }

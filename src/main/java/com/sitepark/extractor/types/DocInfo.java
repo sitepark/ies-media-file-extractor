@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
 
@@ -80,21 +82,16 @@ public final class DocInfo extends FileInfo {
 	@Override
 	public String toString() {
 
-		StringBuilder b = new StringBuilder(50)
-				.append("DocInfo[")
-				.append("title:")
+		StringBuilder b = new StringBuilder(100)
+				.append("DocInfo[title:")
 				.append(this.title)
-				.append(", ")
-				.append("description:")
+				.append(", description:")
 				.append(this.description)
-				.append(", ")
-				.append("creationDate:")
+				.append(", creationDate:")
 				.append(this.creationDate)
-				.append(", ")
-				.append("lastModificationDate:")
+				.append(", lastModificationDate:")
 				.append(this.lastModificationDate)
-				.append(", ")
-				.append("extractedContent:")
+				.append(", extractedContent:")
 				.append(this.extractedContent)
 				.append(']');
 		return b.toString();
@@ -127,6 +124,7 @@ public final class DocInfo extends FileInfo {
 
 		private String extractedContent;
 
+		@SuppressFBWarnings("PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES")
 		private Builder() {
 		}
 
@@ -158,11 +156,13 @@ public final class DocInfo extends FileInfo {
 			return this;
 		}
 
+		@SuppressWarnings("PMD.NullAssignment")
 		public Builder extractedContent(String extractedContent) {
-			if (extractedContent != null && extractedContent.isBlank()) {
-				extractedContent = null;
+			if (extractedContent == null || extractedContent.isBlank()) {
+				this.extractedContent = null;
+			} else {
+				this.extractedContent = extractedContent;
 			}
-			this.extractedContent = extractedContent;
 			return this;
 		}
 
