@@ -25,9 +25,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sitepark.extractor.test.FileInfoTestParameter;
 import com.sitepark.extractor.types.DocInfo;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 class ExtractorTest {
 
 	private final Extractor extractor = new Extractor();
+
+	private static final String EXPECTION_FILE_SUFFIX = ".expected.json";
 
 	@ParameterizedTest(name = "[{index}] {0}")
 	@MethodSource("createArguments")
@@ -42,13 +46,15 @@ class ExtractorTest {
 	}
 
 	@Test
-	void testUnsupported() throws ExtractionException {
+	@SuppressFBWarnings("RV_EXCEPTION_NOT_THROWN")
+	void testUnsupported() {
 		Path path = Paths.get("src/test/resources/files/unsupported/unsupported");
 		assertThrows(UnsupportedMediaTypeException.class, () -> {
 			this.extractor.extract(path);
 		});
 	}
 
+	@SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
 	private static Stream<FileInfoTestParameter> createArguments() throws IOException {
 
 		Path path = Paths.get("src/test/resources/files/docs");
@@ -67,7 +73,11 @@ class ExtractorTest {
 				if (file.toString().endsWith(".expected.json")) {
 					continue;
 				}
-				Path json = file.getParent().resolve(file.getFileName() + ".expected.json");
+				Path dir = file.getParent();
+				if (dir == null) {
+					continue;
+				}
+				Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
 				DocInfo docInfo = mapper.readValue(json.toFile(), DocInfo.class);
 
 				arguments.add(new FileInfoTestParameter(file, docInfo));
@@ -79,7 +89,8 @@ class ExtractorTest {
 
 	@Test
 	@Disabled // Enable to create and update *.expected.json files
-	void createNewExpectedJsonFiles() throws Exception {
+	@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+	void createNewExpectedJsonFiles() throws IOException, ExtractionException {
 
 		Path path = Paths.get("src/test/resources/files/docs");
 
@@ -96,9 +107,12 @@ class ExtractorTest {
 				if (file.toString().endsWith(".expected.json")) {
 					continue;
 				}
-				System.out.println("### " + file);
 				FileInfo fileInfo = this.extractor.extract(file);
-				Path json = file.getParent().resolve(file.getFileName() + ".expected.json");
+				Path dir = file.getParent();
+				if (dir == null) {
+					continue;
+				}
+				Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
 				mapper.writeValue(json.toFile(), fileInfo);
 			}
 		}

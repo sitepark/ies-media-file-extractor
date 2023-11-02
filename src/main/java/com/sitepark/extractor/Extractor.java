@@ -62,7 +62,7 @@ public class Extractor {
 			InputStream inputstream = TikaInputStream.get(path, metadata);
 		) {
 			parser.parse(inputstream, handler, metadata, context);
-		} catch (EncryptedDocumentException e) {
+		} catch (EncryptedDocumentException e) { //NOPMD
 			/*
 			 * If the document is encrypted we take the data we can get.
 			 * That should be enough for us.
@@ -75,7 +75,7 @@ public class Extractor {
 	}
 
 	private FileInfo toFileInfo(Metadata metadata, BodyContentHandler handler)
-			throws ExtractionException {
+			throws ExtractionException, UnsupportedMediaTypeException {
 
 		MediaType mediaType = MediaType.parse(metadata.get("Content-Type"));
 		if (mediaType == null) {
@@ -88,7 +88,7 @@ public class Extractor {
 	}
 
 	private FileInfoFactory<?> getFileInfoFactory(MediaType mediaType)
-			throws ExtractionException {
+			throws UnsupportedMediaTypeException {
 
 		for (FileInfoFactory<?> factory : this.factoryList) {
 			if (factory.getSupportedTypes().contains(mediaType)) {
