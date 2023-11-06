@@ -77,7 +77,7 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 	private String getFirstString(Metadata metadata, Property name) {
 
 		String[] value = metadata.getValues(name);
-		if (value == null || value.length == 0) {
+		if (value.length == 0) {
 			return null;
 		}
 

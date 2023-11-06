@@ -1,15 +1,13 @@
 package com.sitepark.extractor;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.tika.detect.DefaultDetector;
-import org.apache.tika.detect.Detector;
 import org.apache.tika.exception.EncryptedDocumentException;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
@@ -25,17 +23,26 @@ public class Extractor {
 
 	private final List<FileInfoFactory<?>> factoryList = new ArrayList<>();
 
+	private final Parser parser;
+
 	private final Set<MediaType> supportedMediaTypes = new HashSet<>();
 
 	private static final FileInfoFactory<?>[] DEFAULT_FACTORY_LIST = new FileInfoFactory<?>[] {
 		new DocInfoFactory()
 	};
 
+	private static final Parser DEFAULT_PARSER = new AutoDetectParser();
+
 	public Extractor() {
 		this(DEFAULT_FACTORY_LIST);
 	}
 
 	public Extractor(FileInfoFactory<?>... factoryList) {
+		this(DEFAULT_PARSER, factoryList);
+	}
+
+	public Extractor(Parser parser, FileInfoFactory<?>... factoryList) {
+		this.parser = parser;
 		for (FileInfoFactory<?> factory : factoryList) {
 			this.addFileInfoFactory(factory);
 		}
@@ -54,14 +61,13 @@ public class Extractor {
 	public FileInfo extract(Path path) throws ExtractionException {
 
 		Metadata metadata = new Metadata();
-		Parser parser = new AutoDetectParser();
 		BodyContentHandler handler = new BodyContentHandler();
 		ParseContext context = new ParseContext();
 
 		try (
-			InputStream inputstream = TikaInputStream.get(path, metadata);
+			InputStream inputstream = this.createInputStream(path, metadata);
 		) {
-			parser.parse(inputstream, handler, metadata, context);
+			this.parser.parse(inputstream, handler, metadata, context);
 		} catch (EncryptedDocumentException e) { //NOPMD
 			/*
 			 * If the document is encrypted we take the data we can get.
@@ -72,6 +78,11 @@ public class Extractor {
 		}
 
 		return this.toFileInfo(metadata, handler);
+	}
+
+	protected InputStream createInputStream(Path path, Metadata metadata)
+			throws IOException {
+		return TikaInputStream.get(path, metadata);
 	}
 
 	private FileInfo toFileInfo(Metadata metadata, BodyContentHandler handler)

@@ -3,8 +3,10 @@ package com.sitepark.extractor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.Parser;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -43,6 +47,34 @@ class ExtractorTest {
 	@Test
 	void testIfSupported() {
 		assertTrue(this.extractor.isSupported("application/pdf"), "pdf should be supported");
+	}
+
+
+	@Test
+	void testExtractionException() {
+		Path path = Paths.get("src/test/resources/files/notfound");
+		assertThrows(ExtractionException.class, () -> {
+			this.extractor.extract(path);
+		});
+	}
+
+	@Test
+	void testNoContentType() {
+		Path path = Paths.get("src/test/resources/files/docs/Sample.pdf");
+		Parser parser = mock();
+		InputStream inputstream = mock();
+		Extractor extractor = new Extractor(parser) {
+			@Override
+			protected InputStream createInputStream(Path path, Metadata metadata) {
+				return inputstream;
+			}
+		};
+		ExtractionException e = assertThrows(ExtractionException.class, () -> {
+			extractor.extract(path);
+		});
+		assertTrue(
+				e.getMessage().contains("Content-Type"),
+				"message should be contains 'Content-Type': " + e.getMessage());
 	}
 
 	@Test

@@ -68,6 +68,22 @@ class DocInfoTest {
 	}
 
 	@Test
+	public void testSetNullExtractedContent() {
+		DocInfo docInfo = DocInfo.builder()
+				.extractedContent(null)
+				.build();
+		assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
+	}
+
+	@Test
+	public void testSetBlankExtractedContent() {
+		DocInfo docInfo = DocInfo.builder()
+				.extractedContent(" ")
+				.build();
+		assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
+	}
+
+	@Test
 	public void testWithBlankExtractedContent() {
 		DocInfo docInfo = DocInfo.builder()
 				.extractedContent("")
