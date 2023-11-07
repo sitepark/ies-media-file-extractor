@@ -1,4 +1,7 @@
-# File extractor
+[![codecov](https://codecov.io/gh/sitepark/ies-media-file-extractor/graph/badge.svg?token=WM62RRnk4X)](https://codecov.io/gh/sitepark/ies-media-file-extractor)
+[![Known Vulnerabilities](https://snyk.io/test/github/sitepark/ies-media-file-extractor/badge.svg)](https://snyk.io/test/github/sitepark/ies-media-file-extractor/)
+
+# IES media file extractor
 
 For the media management of the CMS IES, the media to be managed are analyzed and, depending on the file type, metadata and, if necessary, also the text contained are read out. This project takes over the task to extract the required data from the files.
 
