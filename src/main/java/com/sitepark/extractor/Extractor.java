@@ -95,7 +95,12 @@ public class Extractor {
 
 		FileInfoFactory<?> factory = this.getFileInfoFactory(mediaType);
 		String extractedContent = handler.toString();
-		return factory.create(metadata, extractedContent);
+		String reducedContent = this.reduceWhitespaces(extractedContent);
+		return factory.create(metadata, reducedContent);
+	}
+
+	private String reduceWhitespaces(String s) {
+		return s.replaceAll("\\s+", " ");
 	}
 
 	private FileInfoFactory<?> getFileInfoFactory(MediaType mediaType)

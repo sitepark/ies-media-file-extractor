@@ -49,7 +49,6 @@ class ExtractorTest {
 		assertTrue(this.extractor.isSupported("application/pdf"), "pdf should be supported");
 	}
 
-
 	@Test
 	void testExtractionException() {
 		Path path = Paths.get("src/test/resources/files/notfound");
