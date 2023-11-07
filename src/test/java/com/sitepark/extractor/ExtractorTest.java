@@ -40,7 +40,6 @@ class ExtractorTest {
 	@ParameterizedTest(name = "[{index}] {0}")
 	@MethodSource("createArguments")
 	void testWithArguments(Path path, DocInfo expected) throws ExtractionException {
-		System.out.println("path: " + path);
 		DocInfo docInfo = (DocInfo)this.extractor.extract(path);
 		assertEquals(expected, docInfo, "unexpected docInfo");
 	}

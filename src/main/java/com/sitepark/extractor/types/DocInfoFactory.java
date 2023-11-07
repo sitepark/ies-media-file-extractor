@@ -67,9 +67,7 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 	}
 
 	private Long getDate(Metadata metadata, Property name) {
-		System.out.println(metadata.get(name));
 		Date date = metadata.getDate(name);
-		System.out.println(name.getName() + ": " + date + (date != null ? " " + date.getTime() : ""));
 		if (date == null) {
 			return null;
 		}
