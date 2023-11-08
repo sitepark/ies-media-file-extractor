@@ -71,6 +71,14 @@ class ExtractorTest {
 	}
 
 	@Test
+	void testInvalidWriteLimit() throws ExtractionException {
+		Extractor extractor = new Extractor();
+		assertThrows(IllegalArgumentException.class, () -> {
+			extractor.setDefaultWriteLimit(0);
+		}, "writeLimit must be greater then 0");
+	}
+
+	@Test
 	void testNoContentType() {
 		Path path = Paths.get("src/test/resources/files/docs/Sample.pdf");
 		Parser parser = mock();
