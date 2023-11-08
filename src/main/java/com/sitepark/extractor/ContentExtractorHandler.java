@@ -5,6 +5,8 @@ import java.io.StringWriter;
 import org.apache.tika.sax.ToTextContentHandler;
 import org.xml.sax.SAXException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class ContentExtractorHandler extends ToTextContentHandler {
 
 	private final int writeLimit;
@@ -13,6 +15,7 @@ public class ContentExtractorHandler extends ToTextContentHandler {
 
 	private boolean writeLimitReached;
 
+	@SuppressFBWarnings("EI_EXPOSE_REP2")
 	public ContentExtractorHandler(StringWriter writer, int writeLimit) {
 		super(writer);
 		this.writer = writer;
