@@ -58,6 +58,19 @@ class ExtractorTest {
 	}
 
 	@Test
+	void testWriteLimit() throws ExtractionException {
+		Path path = Paths.get("src/test/resources/files/docs/Sample.pdf");
+		Extractor extractor = new Extractor();
+		extractor.setDefaultWriteLimit(10);
+		DocInfo docInfo = (DocInfo)extractor.extract(path);
+
+		assertEquals(
+				10,
+				docInfo.getExtractedContent().length(),
+				"Content should be truncated after 10 characters");
+	}
+
+	@Test
 	void testNoContentType() {
 		Path path = Paths.get("src/test/resources/files/docs/Sample.pdf");
 		Parser parser = mock();
