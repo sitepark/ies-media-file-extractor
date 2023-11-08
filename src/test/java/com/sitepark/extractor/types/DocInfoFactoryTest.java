@@ -1,7 +1,9 @@
 package com.sitepark.extractor.types;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 
@@ -13,6 +15,16 @@ import org.junit.jupiter.api.Test;
 class DocInfoFactoryTest {
 
 	private final DocInfoFactory factory = new DocInfoFactory();
+
+	@Test
+	void testIsSupported() {
+		assertTrue(DocInfoFactory.isSupported("application/pdf"), "pdf should be supported");
+	}
+
+	@Test
+	void testIsNotSupported() {
+		assertFalse(DocInfoFactory.isSupported("image/gif"), "gif should not be supported");
+	}
 
 	@Test
 	void testWithoutTitle() {
