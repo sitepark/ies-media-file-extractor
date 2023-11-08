@@ -34,6 +34,11 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 					MediaType.application("vnd.openxmlformats-officedocument.presentationml.presentation")
 	)));
 
+	public static boolean isSupported(String type) {
+		MediaType mediaType = MediaType.parse(type);
+		return SUPPORTED_TYPES.contains(mediaType);
+	}
+
 	@Override
 	public Set<MediaType> getSupportedTypes() {
 		return SUPPORTED_TYPES;
