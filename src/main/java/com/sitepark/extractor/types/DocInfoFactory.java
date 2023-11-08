@@ -31,7 +31,11 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 					MediaType.application("vnd.ms-excel"),
 					MediaType.application("vnd.openxmlformats-officedocument.wordprocessingml.document"),
 					MediaType.application("vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-					MediaType.application("vnd.openxmlformats-officedocument.presentationml.presentation")
+					MediaType.application("vnd.openxmlformats-officedocument.presentationml.presentation"),
+					// Compatibility
+					MediaType.application("vnd.openxmlformats-officedocument.wordprocessingml"),
+					MediaType.application("vnd.openxmlformats-officedocument.spreadsheetml"),
+					MediaType.application("vnd.openxmlformats-officedocument.presentationml")
 	)));
 
 	public static boolean isSupported(String type) {
