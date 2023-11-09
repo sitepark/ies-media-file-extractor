@@ -84,7 +84,6 @@ class ExtractorTest {
 	void testWithBrokenPdf() throws ExtractionException {
 		Path path = Paths.get("src/test/resources/files/docs/broken/pressemeldung.pdf");
 		Extractor extractor = new Extractor();
-		extractor.extract(path);
 		assertThrows(ExtractionException.class, () -> {
 			extractor.extract(path);
 		},
