@@ -2,6 +2,7 @@ package com.sitepark.extractor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
 
 import com.sitepark.extractor.types.DocInfoFactory;
 
@@ -24,6 +24,8 @@ public class Extractor {
 	private final List<FileInfoFactory<?>> factoryList = new ArrayList<>();
 
 	private final Parser parser;
+
+	private int defaultWriteLimit = 100 * 1000;
 
 	private final Set<MediaType> supportedMediaTypes = new HashSet<>();
 
@@ -35,6 +37,13 @@ public class Extractor {
 
 	public Extractor() {
 		this(DEFAULT_FACTORY_LIST);
+	}
+
+	public void setDefaultWriteLimit(int defaultWriteLimit) {
+		if (defaultWriteLimit <= 0) {
+			throw new IllegalArgumentException("defaultWriteLimit must be greater than 0");
+		}
+		this.defaultWriteLimit = defaultWriteLimit;
 	}
 
 	public Extractor(FileInfoFactory<?>... factoryList) {
@@ -59,10 +68,16 @@ public class Extractor {
 	}
 
 	public FileInfo extract(Path path) throws ExtractionException {
+		return this.extract(path, this.defaultWriteLimit);
+	}
+
+	public FileInfo extract(Path path, int writeLimit) throws ExtractionException {
 
 		Metadata metadata = new Metadata();
-		BodyContentHandler handler = new BodyContentHandler();
+
 		ParseContext context = new ParseContext();
+
+		ContentExtractorHandler handler = this.createContentHandler(writeLimit);
 
 		try (
 			InputStream inputstream = this.createInputStream(path, metadata);
@@ -80,12 +95,16 @@ public class Extractor {
 		return this.toFileInfo(metadata, handler);
 	}
 
+	private ContentExtractorHandler createContentHandler(int writeLimit) {
+		return new ContentExtractorHandler(new StringWriter(), writeLimit);
+	}
+
 	protected InputStream createInputStream(Path path, Metadata metadata)
 			throws IOException {
 		return TikaInputStream.get(path, metadata);
 	}
 
-	private FileInfo toFileInfo(Metadata metadata, BodyContentHandler handler)
+	private FileInfo toFileInfo(Metadata metadata, ContentExtractorHandler handler)
 			throws ExtractionException, UnsupportedMediaTypeException {
 
 		MediaType mediaType = MediaType.parse(metadata.get("Content-Type"));
@@ -94,13 +113,8 @@ public class Extractor {
 		}
 
 		FileInfoFactory<?> factory = this.getFileInfoFactory(mediaType);
-		String extractedContent = handler.toString();
-		String reducedContent = this.reduceWhitespaces(extractedContent);
-		return factory.create(metadata, reducedContent);
-	}
-
-	private String reduceWhitespaces(String s) {
-		return s.replaceAll("\\s+", " ");
+		String extractedContent = handler.toTidyString();
+		return factory.create(metadata, extractedContent);
 	}
 
 	private FileInfoFactory<?> getFileInfoFactory(MediaType mediaType)

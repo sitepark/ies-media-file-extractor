@@ -12,6 +12,7 @@ import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class DocInfoFactoryTest {
 
 	private final DocInfoFactory factory = new DocInfoFactory();
