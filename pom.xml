@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.8.0</version>
+			<version>4.8.1</version>
 			<optional>true</optional>
 		</dependency>
 		<!-- Test-Dependencies -->
@@ -254,7 +254,7 @@
 						</goals>
 						<configuration>
 							<rules>
-								<banDuplicatePomDependencyVersions />
+								<banDuplicatePomDependencyVersions/>
 								<requireMavenVersion>
 									<version>3.8</version>
 								</requireMavenVersion>
@@ -276,8 +276,7 @@
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
 									<message>No Snapshots Allowed!</message>
 								</requireReleaseDeps>
-								<requireReleaseDepsInPlugins
-									implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins" />
+								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
 							</rules>
 							<fail>true</fail>
 						</configuration>
