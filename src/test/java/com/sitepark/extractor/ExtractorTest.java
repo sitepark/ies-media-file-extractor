@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
 import org.junit.jupiter.api.Disabled;
@@ -76,6 +78,19 @@ class ExtractorTest {
 		assertThrows(IllegalArgumentException.class, () -> {
 			extractor.setDefaultWriteLimit(0);
 		}, "writeLimit must be greater then 0");
+	}
+
+	@Test
+	void testWithBrokenPdf() throws ExtractionException {
+		Path path = Paths.get("src/test/resources/files/docs/broken/pressemeldung.pdf");
+		Extractor extractor = new Extractor();
+		assertThrows(ExtractionException.class, () -> {
+			extractor.extract(path);
+		},
+				"So far, this PDF has led to an error, which is probably due" +
+				"to a bug in PDFBox. If this test now fails, the problem seems " +
+				"to have been solved and the test can be deleted."
+		);
 	}
 
 	@Test

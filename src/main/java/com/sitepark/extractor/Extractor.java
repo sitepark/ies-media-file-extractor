@@ -89,7 +89,7 @@ public class Extractor {
 			 * That should be enough for us.
 			 */
 		} catch (Throwable t) {
-			throw new ExtractionException(t.getMessage(), t);
+			throw new ExtractionException(path + ": extraction failed", t);
 		}
 
 		return this.toFileInfo(metadata, handler);
