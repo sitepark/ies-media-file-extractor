@@ -1,15 +1,20 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.sitepark.ies</groupId>
 	<artifactId>ies-media-file-extractor</artifactId>
-	<packaging>jar</packaging>
 	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>Metadata and content extractor</name>
 	<description>For all media supported by the IES, the metadata and, if applicable, also its textual content are read out via this API.</description>
 	<url>https://github.com/sitepark/ies-media-file-extractor</url>
+
+	<organization>
+		<name>Sitepark</name>
+		<url>https://www.sitepark.com</url>
+	</organization>
 
 	<licenses>
 		<license>
@@ -17,11 +22,6 @@
 			<url>https://opensource.org/licenses/MIT</url>
 		</license>
 	</licenses>
-
-	<organization>
-		<name>Sitepark</name>
-		<url>https://www.sitepark.com</url>
-	</organization>
 
 	<developers>
 		<developer>
@@ -38,21 +38,22 @@
 		</developer>
 	</developers>
 
+	<scm>
+		<connection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</connection>
+		<developerConnection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/sitepark/ies-media-file-extractor</url>
+	</scm>
+
 	<properties>
 		<tika.version>2.9.1</tika.version>
 		<junit.version>5.10.1</junit.version>
 		<spotbugs.version>4.8.3</spotbugs.version>
+		<spotless.version>2.43.0</spotless.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
 		<gpg.skip>true</gpg.skip>
 	</properties>
-
-	<scm>
-		<connection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</connection>
-		<developerConnection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</developerConnection>
-		<url>https://github.com/sitepark/ies-media-file-extractor</url>
-		<tag>HEAD</tag>
-	</scm>
 
 	<dependencyManagement>
 		<dependencies>
@@ -101,7 +102,6 @@
 			<artifactId>tika-parser-miscoffice-module</artifactId>
 			<version>${tika.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
@@ -153,6 +153,12 @@
 
 	</dependencies>
 	<build>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
@@ -166,10 +172,10 @@
 				<executions>
 					<execution>
 						<id>add-integration-test-sources</id>
-						<phase>generate-test-sources</phase>
 						<goals>
 							<goal>add-test-source</goal>
 						</goals>
+						<phase>generate-test-sources</phase>
 						<configuration>
 							<sources>
 								<source>src/integration-test/java</source>
@@ -227,10 +233,10 @@
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
-						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
+						<phase>verify</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -238,7 +244,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>3.0.1</version>
 				<configuration>
-					<scmCommentPrefix>ci(release): </scmCommentPrefix>
+					<scmCommentPrefix>ci(release):</scmCommentPrefix>
 					<tagNameFormat>@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
@@ -246,6 +252,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<version>3.4.1</version>
+				<dependencies>
+					<dependency>
+						<groupId>io.github.thefolle</groupId>
+						<artifactId>glowing-waffle</artifactId>
+						<version>1.2.0</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<id>enforce-maven</id>
@@ -254,7 +267,7 @@
 						</goals>
 						<configuration>
 							<rules>
-								<banDuplicatePomDependencyVersions/>
+								<banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
 								<requireMavenVersion>
 									<version>3.8</version>
 								</requireMavenVersion>
@@ -266,29 +279,22 @@
 					</execution>
 					<execution>
 						<id>verify-release</id>
-						<phase>none</phase>
 						<goals>
 							<goal>enforce</goal>
 						</goals>
+						<phase>none</phase>
 						<configuration>
 							<rules>
 								<requireReleaseDeps>
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
 									<message>No Snapshots Allowed!</message>
 								</requireReleaseDeps>
-								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
+								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"></requireReleaseDepsInPlugins>
 							</rules>
 							<fail>true</fail>
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.github.thefolle</groupId>
-						<artifactId>glowing-waffle</artifactId>
-						<version>1.2.0</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -322,31 +328,51 @@
 					</execution>
 					<execution>
 						<id>generate-code-coverage-report</id>
-						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<phase>test</phase>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.3.1</version>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${spotless.version}</version>
 				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
-					<inputEncoding>UTF-8</inputEncoding>
-					<consoleOutput>true</consoleOutput>
-					<failsOnError>true</failsOnError>
-					<linkXRef>false</linkXRef>
+					<!-- define a language-specific format -->
+					<java>
+						<removeUnusedImports>
+							<engine>google-java-format</engine>
+						</removeUnusedImports>
+
+						<!-- apply a specific flavor of google-java-format and reflow long strings -->
+						<googleJavaFormat>
+							<version>1.19.2</version>
+							<style>GOOGLE</style>
+							<reflowLongStrings>true</reflowLongStrings>
+							<formatJavadoc>false</formatJavadoc>
+						</googleJavaFormat>
+						<formatAnnotations></formatAnnotations>
+					</java>
+					<pom>
+						<!-- These are the defaults, you can override if you want -->
+						<includes>
+							<include>pom.xml</include>
+						</includes>
+						<sortPom>
+							<!--  value of -1 indicates that a tab character should be used instead -->
+							<nrOfIndentSpace>-1</nrOfIndentSpace>
+						</sortPom>
+					</pom>
 				</configuration>
 				<executions>
 					<execution>
-						<id>checkstyle</id>
-						<phase>verify</phase>
+						<id>spotless-check</id>
 						<goals>
 							<goal>check</goal>
 						</goals>
+						<phase>verify</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -354,14 +380,6 @@
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>4.8.3.0</version>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
@@ -378,20 +396,19 @@
 						<version>${spotbugs.version}</version>
 					</dependency>
 				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<phase>verify</phase>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.21.2</version>
-				<executions>
-					<execution>
-						<id>pmd</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<rulesets>
 						<ruleset>pmd-ruleset.xml</ruleset>
@@ -400,15 +417,19 @@
 					<failOnViolation>true</failOnViolation>
 					<failurePriority>5</failurePriority>
 					<printFailingErrors>true</printFailingErrors>
-					<linkXRef>false</linkXRef> <!-- otherwise generates a warning -->
+					<linkXRef>false</linkXRef>
+					<!-- otherwise generates a warning -->
 				</configuration>
+				<executions>
+					<execution>
+						<id>pmd</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<phase>verify</phase>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
 	</build>
 </project>
