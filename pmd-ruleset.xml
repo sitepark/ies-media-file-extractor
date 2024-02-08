@@ -68,7 +68,7 @@
 	<rule ref="category/java/bestpractices.xml/WhileLoopWithLiteralBoolean"/>
 	<rule ref="category/java/bestpractices.xml/PrimitiveWrapperInstantiation"/>
 
-	<!-- disable codestyle-checks, use checkstyle
+	<!-- disable codestyle-checks, use spotless
 	<rule ref="category/java/codestyle.xml/AvoidDollarSigns"/>
 	<rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass"/>
 	<rule ref="category/java/codestyle.xml/AvoidProtectedMethodInFinalClassNotExtending"/>
