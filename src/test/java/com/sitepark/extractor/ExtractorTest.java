@@ -89,9 +89,10 @@ class ExtractorTest {
         () -> {
           extractor.extract(path);
         },
-        "So far, this PDF has led to an error, which is probably due"
-            + "to a bug in PDFBox. If this test now fails, the problem seems "
-            + "to have been solved and the test can be deleted.");
+        """
+        	So far, this PDF has led to an error, which is probably due\
+        	to a bug in PDFBox. If this test now fails, the problem seems\s\
+        	to have been solved and the test can be deleted.""");
   }
 
   @Test
@@ -139,10 +140,7 @@ class ExtractorTest {
 
     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
       for (Path file : dirStream) {
-        if (Files.isDirectory(file)) {
-          continue;
-        }
-        if (file.toString().endsWith(".expected.json")) {
+        if (Files.isDirectory(file) || file.toString().endsWith(".expected.json")) {
           continue;
         }
         Path dir = file.getParent();
@@ -171,10 +169,7 @@ class ExtractorTest {
 
     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
       for (Path file : dirStream) {
-        if (Files.isDirectory(file)) {
-          continue;
-        }
-        if (file.toString().endsWith(".expected.json")) {
+        if (Files.isDirectory(file) || file.toString().endsWith(".expected.json")) {
           continue;
         }
         FileInfo fileInfo = this.extractor.extract(file);

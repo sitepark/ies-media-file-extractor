@@ -27,8 +27,7 @@ public class Extractor {
 
   private final Set<MediaType> supportedMediaTypes = new HashSet<>();
 
-  private static final FileInfoFactory<?>[] DEFAULT_FACTORY_LIST =
-      new FileInfoFactory<?>[] {new DocInfoFactory()};
+  private static final FileInfoFactory<?>[] DEFAULT_FACTORY_LIST = {new DocInfoFactory()};
 
   private static final Parser DEFAULT_PARSER = new AutoDetectParser();
 

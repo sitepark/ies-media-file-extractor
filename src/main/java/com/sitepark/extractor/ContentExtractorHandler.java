@@ -40,7 +40,7 @@ public class ContentExtractorHandler extends ToTextContentHandler {
 
   private boolean wouldLimitBeReached(int length) {
     int writeCount = this.writer.getBuffer().length();
-    return this.writeLimit != -1 && writeCount + length > this.writeLimit;
+    return (this.writeLimit != -1) && ((writeCount + length) > this.writeLimit);
   }
 
   @Override

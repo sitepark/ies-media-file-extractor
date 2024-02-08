@@ -28,23 +28,23 @@ public final class DocInfo extends FileInfo {
   }
 
   public String getTitle() {
-    return title;
+    return this.title;
   }
 
   public String getDescription() {
-    return description;
+    return this.description;
   }
 
   public Long getCreationDate() {
-    return creationDate;
+    return this.creationDate;
   }
 
   public Long getLastModificationDate() {
-    return lastModificationDate;
+    return this.lastModificationDate;
   }
 
   public String getExtractedContent() {
-    return extractedContent;
+    return this.extractedContent;
   }
 
   @Override
@@ -79,34 +79,29 @@ public final class DocInfo extends FileInfo {
 
   @Override
   public String toString() {
-
-    StringBuilder b =
-        new StringBuilder(100)
-            .append("DocInfo[title:")
-            .append(this.title)
-            .append(", description:")
-            .append(this.description)
-            .append(", creationDate:")
-            .append(this.creationDate)
-            .append(", lastModificationDate:")
-            .append(this.lastModificationDate)
-            .append(", extractedContent:")
-            .append(this.extractedContent)
-            .append(']');
-    return b.toString();
+    return "DocInfo [title="
+        + this.title
+        + ", description="
+        + this.description
+        + ", creationDate="
+        + this.creationDate
+        + ", lastModificationDate="
+        + this.lastModificationDate
+        + ", extractedContent="
+        + this.extractedContent
+        + "]";
   }
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof DocInfo)) {
+    if (!(o instanceof DocInfo that)) {
       return false;
     }
-    DocInfo info = (DocInfo) o;
-    return Objects.equals(info.getTitle(), this.title)
-        && Objects.equals(info.getDescription(), this.description)
-        && Objects.equals(info.getCreationDate(), this.creationDate)
-        && Objects.equals(info.getLastModificationDate(), this.lastModificationDate)
-        && Objects.equals(info.getExtractedContent(), this.extractedContent);
+    return Objects.equals(that.getTitle(), this.title)
+        && Objects.equals(that.getDescription(), this.description)
+        && Objects.equals(that.getCreationDate(), this.creationDate)
+        && Objects.equals(that.getLastModificationDate(), this.lastModificationDate)
+        && Objects.equals(that.getExtractedContent(), this.extractedContent);
   }
 
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
@@ -155,7 +150,7 @@ public final class DocInfo extends FileInfo {
 
     @SuppressWarnings("PMD.NullAssignment")
     public Builder extractedContent(String extractedContent) {
-      if (extractedContent == null || extractedContent.isBlank()) {
+      if ((extractedContent == null) || extractedContent.isBlank()) {
         this.extractedContent = null;
       } else {
         this.extractedContent = extractedContent;
