@@ -9,6 +9,8 @@ import java.util.Objects;
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
 
+  private static final long serialVersionUID = 1L;
+
   private final String title;
 
   private final String description;
