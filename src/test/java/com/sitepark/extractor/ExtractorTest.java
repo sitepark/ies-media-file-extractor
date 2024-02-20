@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 class ExtractorTest {
 
   private final Extractor extractor = new Extractor();

@@ -6,6 +6,7 @@ import com.sitepark.extractor.FileInfo;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
 
+@SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
 
