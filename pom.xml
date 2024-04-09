@@ -48,7 +48,7 @@
 	<properties>
 		<tika.version>2.9.1</tika.version>
 		<junit.version>5.10.2</junit.version>
-		<spotbugs.version>4.8.3</spotbugs.version>
+		<spotbugs.version>4.8.4</spotbugs.version>
 		<spotless.version>2.43.0</spotless.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
