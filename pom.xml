@@ -198,7 +198,8 @@
 				<version>3.2.5</version>
 				<configuration>
 					<argLine>-Duser.timezone=Europe/Berlin ${argLine}</argLine>
-￼				</configuration>
+					￼
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
