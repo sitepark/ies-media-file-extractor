@@ -393,7 +393,8 @@
 				</configuration>
 				<!-- https://spotbugs.readthedocs.io/en/latest/maven.html -->
 				<dependencies>
-					<!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+					<!-- overwrite dependency on spotbugs if you want to specify the version of
+					spotbugs -->
 					<dependency>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs</artifactId>
@@ -437,18 +438,18 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>nexus-staging-release</id>
+			<id>publish-release</id>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.13</version>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>0.5.0</version>
 						<extensions>true</extensions>
 						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<publishingServerId>central</publishingServerId>
+							<autoPublish>true</autoPublish>
+							<waitUntil>published</waitUntil>
 						</configuration>
 					</plugin>
 				</plugins>
