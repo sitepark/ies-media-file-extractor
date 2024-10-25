@@ -46,7 +46,7 @@
 	</scm>
 
 	<properties>
-		<tika.version>2.9.2</tika.version>
+		<tika.version>3.0.0</tika.version>
 		<junit.version>5.10.2</junit.version>
 		<spotbugs.version>4.8.4</spotbugs.version>
 		<spotless.version>2.43.0</spotless.version>
@@ -271,7 +271,7 @@
 						</goals>
 						<configuration>
 							<rules>
-								<banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
+								<banDuplicatePomDependencyVersions/>
 								<requireMavenVersion>
 									<version>3.8</version>
 								</requireMavenVersion>
@@ -293,7 +293,7 @@
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
 									<message>No Snapshots Allowed!</message>
 								</requireReleaseDeps>
-								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"></requireReleaseDepsInPlugins>
+								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
 							</rules>
 							<fail>true</fail>
 						</configuration>
@@ -357,7 +357,7 @@
 							<reflowLongStrings>true</reflowLongStrings>
 							<formatJavadoc>false</formatJavadoc>
 						</googleJavaFormat>
-						<formatAnnotations></formatAnnotations>
+						<formatAnnotations/>
 					</java>
 					<pom>
 						<!-- These are the defaults, you can override if you want -->
