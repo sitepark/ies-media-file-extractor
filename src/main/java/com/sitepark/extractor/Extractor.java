@@ -10,12 +10,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.tika.exception.EncryptedDocumentException;
+import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
+import org.xml.sax.SAXException;
 
 public class Extractor {
 
@@ -82,8 +84,8 @@ public class Extractor {
        * If the document is encrypted we take the data we can get.
        * That should be enough for us.
        */
-    } catch (Throwable t) {
-      throw new ExtractionException(path + ": extraction failed", t);
+    } catch (IOException | SAXException | TikaException e) {
+      throw new ExtractionException(path + ": extraction failed", e);
     }
 
     return this.toFileInfo(metadata, handler);

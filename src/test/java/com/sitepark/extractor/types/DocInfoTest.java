@@ -13,66 +13,66 @@ class DocInfoTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testEqualsContract() {
+  void testEqualsContract() {
     EqualsVerifier.forClass(DocInfo.class).verify();
   }
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(DocInfo.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
   @Test
-  public void testGetTitle() {
+  void testGetTitle() {
     DocInfo docInfo = DocInfo.builder().title("title").build();
     assertEquals("title", docInfo.getTitle(), "unexpected title");
   }
 
   @Test
-  public void testGetDescription() {
+  void testGetDescription() {
     DocInfo docInfo = DocInfo.builder().description("description").build();
     assertEquals("description", docInfo.getDescription(), "unexpected description");
   }
 
   @Test
-  public void testGetCreationDate() {
+  void testGetCreationDate() {
     DocInfo docInfo = DocInfo.builder().creationDate(123L).build();
     assertEquals(123L, docInfo.getCreationDate(), "unexpected creationDate");
   }
 
   @Test
-  public void testGetLastModificationDate() {
+  void testGetLastModificationDate() {
     DocInfo docInfo = DocInfo.builder().lastModificationDate(123L).build();
     assertEquals(123L, docInfo.getLastModificationDate(), "unexpected lastModificationDate");
   }
 
   @Test
-  public void testGetExtractedContent() {
+  void testGetExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent("abc").build();
     assertEquals("abc", docInfo.getExtractedContent(), "unexpected extractedContent");
   }
 
   @Test
-  public void testSetNullExtractedContent() {
+  void testSetNullExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent(null).build();
     assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
   }
 
   @Test
-  public void testSetBlankExtractedContent() {
+  void testSetBlankExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent(" ").build();
     assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
   }
 
   @Test
-  public void testWithBlankExtractedContent() {
+  void testWithBlankExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent("").build();
     assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
   }
 
   @Test
-  public void testToBuilder() {
+  void testToBuilder() {
     DocInfo docInfo =
         DocInfo.builder()
             .title("title")

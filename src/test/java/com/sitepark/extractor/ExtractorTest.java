@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+@SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnitTestShouldIncludeAssert"})
 class ExtractorTest {
 
   private final Extractor extractor = new Extractor();
@@ -160,7 +160,6 @@ class ExtractorTest {
 
   @Test
   @Disabled // Enable to create and update *.expected.json files
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void createNewExpectedJsonFiles() throws IOException, ExtractionException {
 
     Path path = Paths.get("src/test/resources/files/docs");
