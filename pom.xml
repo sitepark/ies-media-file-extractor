@@ -185,6 +185,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.5</version>
 				<configuration>
+					<argLine>-Duser.timezone=Europe/Berlin ${argLine}</argLine>
 					<consoleOutputReporter>
 						<disable>true</disable>
 					</consoleOutputReporter>
