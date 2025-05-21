@@ -23,12 +23,14 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+@SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnitTestShouldIncludeAssert"})
 class ExtractorTest {
 
   private final Extractor extractor = new Extractor();
@@ -85,15 +87,12 @@ class ExtractorTest {
   void testWithBrokenPdf() throws ExtractionException {
     Path path = Paths.get("src/test/resources/files/docs/broken/pressemeldung.pdf");
     Extractor extractor = new Extractor();
-    assertThrows(
-        ExtractionException.class,
-        () -> {
-          extractor.extract(path);
-        },
-        """
-        	So far, this PDF has led to an error, which is probably due\
-        	to a bug in PDFBox. If this test now fails, the problem seems\s\
-        	to have been solved and the test can be deleted.""");
+
+    DocInfo docInfo = (DocInfo) extractor.extract(path);
+    MatcherAssert.assertThat(
+        "Unexpected content",
+        docInfo.getExtractedContent(),
+        CoreMatchers.startsWith("Iseborjer Kinno Pressemitteilung Das"));
   }
 
   @Test
@@ -160,7 +159,6 @@ class ExtractorTest {
 
   @Test
   @Disabled // Enable to create and update *.expected.json files
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void createNewExpectedJsonFiles() throws IOException, ExtractionException {
 
     Path path = Paths.get("src/test/resources/files/docs");
