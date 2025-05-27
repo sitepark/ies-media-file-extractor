@@ -3,7 +3,6 @@ package com.sitepark.extractor.types;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Objects;
 
 @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
@@ -120,7 +119,6 @@ public final class DocInfo extends FileInfo {
 
     private String extractedContent;
 
-    @SuppressFBWarnings("PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES")
     private Builder() {}
 
     private Builder(DocInfo docInfo) {
