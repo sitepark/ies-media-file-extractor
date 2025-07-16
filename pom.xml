@@ -47,7 +47,7 @@
 
 	<properties>
 		<tika.version>3.2.1</tika.version>
-		<junit.version>5.13.2</junit.version>
+		<junit.version>5.13.3</junit.version>
 		<spotbugs.version>4.9.3</spotbugs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>
-			<version>4.0.4</version>
+			<version>4.0.5</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -231,7 +231,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.2.7</version>
+				<version>3.2.8</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -253,7 +253,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.6.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>io.github.thefolle</groupId>
