@@ -46,7 +46,7 @@
 	</scm>
 
 	<properties>
-		<tika.version>3.2.2</tika.version>
+		<tika.version>3.2.3</tika.version>
 		<junit.version>5.13.4</junit.version>
 		<spotbugs.version>4.9.4</spotbugs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
