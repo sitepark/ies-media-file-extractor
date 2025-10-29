@@ -47,7 +47,7 @@
 
 	<properties>
 		<tika.version>3.2.3</tika.version>
-		<junit.version>5.13.4</junit.version>
+		<junit.version>6.0.0</junit.version>
 		<spotbugs.version>4.9.6</spotbugs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
@@ -67,6 +67,13 @@
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
 				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-bom</artifactId>
+				<version>3.27.6</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -138,9 +145,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-library</artifactId>
-			<version>3.0</version>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -149,14 +155,12 @@
 			<version>5.19.0</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>
 			<version>4.2</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jparams</groupId>
 			<artifactId>to-string-verifier</artifactId>

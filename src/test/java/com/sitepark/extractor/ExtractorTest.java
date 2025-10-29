@@ -1,11 +1,12 @@
 package com.sitepark.extractor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -23,8 +24,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -89,10 +88,9 @@ class ExtractorTest {
     Extractor extractor = new Extractor();
 
     DocInfo docInfo = (DocInfo) extractor.extract(path);
-    MatcherAssert.assertThat(
-        "Unexpected content",
-        docInfo.getExtractedContent(),
-        CoreMatchers.startsWith("Iseborjer Kinno Pressemitteilung Das"));
+    assertThat(docInfo.getExtractedContent())
+        .withFailMessage("Unexpected content")
+        .startsWith("Iseborjer Kinno Pressemitteilung Das");
   }
 
   @Test
@@ -164,7 +162,7 @@ class ExtractorTest {
     Path path = Paths.get("src/test/resources/files/docs");
 
     ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
-    mapper.setSerializationInclusion(Include.NON_NULL);
+    mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
       for (Path file : dirStream) {
