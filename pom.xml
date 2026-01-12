@@ -5,7 +5,7 @@
 
 	<groupId>com.sitepark.ies</groupId>
 	<artifactId>ies-media-file-extractor</artifactId>
-	<version>1.4.0</version>
+	<version>1.5.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Metadata and content extractor</name>
 	<description>For all media supported by the IES, the metadata and, if applicable, also its textual content are read out via this API.</description>
@@ -41,7 +41,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</connection>
 		<developerConnection>scm:git:git@github.com:sitepark/ies-media-file-extractor.git</developerConnection>
-		<tag>1.4.0</tag>
+		<tag>HEAD</tag>
 		<url>https://github.com/sitepark/ies-media-file-extractor</url>
 	</scm>
 
@@ -273,7 +273,7 @@
 						</goals>
 						<configuration>
 							<rules>
-								<banDuplicatePomDependencyVersions />
+								<banDuplicatePomDependencyVersions/>
 								<requireMavenVersion>
 									<version>3.8</version>
 								</requireMavenVersion>
@@ -295,7 +295,7 @@
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
 									<message>No Snapshots Allowed!</message>
 								</requireReleaseDeps>
-								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins" />
+								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
 							</rules>
 							<fail>true</fail>
 						</configuration>
