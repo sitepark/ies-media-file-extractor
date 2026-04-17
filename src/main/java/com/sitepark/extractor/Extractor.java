@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.apache.tika.exception.EncryptedDocumentException;
 import org.apache.tika.exception.TikaException;
@@ -19,6 +20,15 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.xml.sax.SAXException;
 
+/**
+ * Extracts metadata and text content from media files using Apache Tika.
+ *
+ * <p>By default, supports PDF, Microsoft Office, OpenDocument and RTF formats via
+ * {@link DocInfoFactory}. Register additional {@link FileInfoFactory} implementations via the
+ * constructors to extend format support.
+ *
+ * <p>This class is not thread-safe due to the mutable {@code defaultWriteLimit} field.
+ */
 public class Extractor {
 
   private final List<FileInfoFactory<?>> factoryList = new ArrayList<>();
@@ -33,10 +43,17 @@ public class Extractor {
 
   private static final Parser DEFAULT_PARSER = new AutoDetectParser();
 
+  /** Creates an {@code Extractor} with the default set of supported formats. */
   public Extractor() {
     this(DEFAULT_FACTORY_LIST);
   }
 
+  /**
+   * Sets the default maximum number of characters to extract per document.
+   *
+   * @param defaultWriteLimit the character limit; must be greater than 0
+   * @throws IllegalArgumentException if {@code defaultWriteLimit} is not greater than 0
+   */
   public void setDefaultWriteLimit(int defaultWriteLimit) {
     if (defaultWriteLimit <= 0) {
       throw new IllegalArgumentException("defaultWriteLimit must be greater than 0");
@@ -44,10 +61,22 @@ public class Extractor {
     this.defaultWriteLimit = defaultWriteLimit;
   }
 
+  /**
+   * Creates an {@code Extractor} with a custom set of {@link FileInfoFactory} implementations.
+   *
+   * @param factoryList one or more factories that handle specific media types
+   */
   public Extractor(FileInfoFactory<?>... factoryList) {
     this(DEFAULT_PARSER, factoryList);
   }
 
+  /**
+   * Creates an {@code Extractor} with a custom Tika {@link Parser} and a custom set of
+   * {@link FileInfoFactory} implementations.
+   *
+   * @param parser the Tika parser to use for content extraction
+   * @param factoryList one or more factories that handle specific media types
+   */
   public Extractor(Parser parser, FileInfoFactory<?>... factoryList) {
     this.parser = parser;
     for (FileInfoFactory<?> factory : factoryList) {
@@ -60,16 +89,44 @@ public class Extractor {
     this.supportedMediaTypes.addAll(factory.getSupportedTypes());
   }
 
+  /**
+   * Returns {@code true} if the given MIME type is supported by one of the registered factories.
+   *
+   * @param mediaType the MIME type string to check, e.g. {@code "application/pdf"}
+   * @return {@code true} if the MIME type is supported, {@code false} otherwise
+   * @throws NullPointerException if {@code mediaType} is {@code null}
+   */
   public boolean isSupported(String mediaType) {
+    Objects.requireNonNull(mediaType, "mediaType must not be null");
     MediaType type = MediaType.parse(mediaType);
     return this.supportedMediaTypes.contains(type);
   }
 
+  /**
+   * Extracts metadata and text content from the file at the given path using the default write
+   * limit.
+   *
+   * @param path the path to the file to extract
+   * @return the extracted {@link FileInfo}; never {@code null}
+   * @throws ExtractionException if extraction fails or the media type is not supported
+   * @throws NullPointerException if {@code path} is {@code null}
+   */
   public FileInfo extract(Path path) throws ExtractionException {
     return this.extract(path, this.defaultWriteLimit);
   }
 
+  /**
+   * Extracts metadata and text content from the file at the given path with a custom character
+   * limit for the extracted text.
+   *
+   * @param path the path to the file to extract
+   * @param writeLimit the maximum number of characters to extract; use {@code -1} for no limit
+   * @return the extracted {@link FileInfo}; never {@code null}
+   * @throws ExtractionException if extraction fails or the media type is not supported
+   * @throws NullPointerException if {@code path} is {@code null}
+   */
   public FileInfo extract(Path path, int writeLimit) throws ExtractionException {
+    Objects.requireNonNull(path, "path must not be null");
 
     Metadata metadata = new Metadata();
 
@@ -79,7 +136,7 @@ public class Extractor {
 
     try (InputStream inputstream = this.createInputStream(path, metadata); ) {
       this.parser.parse(inputstream, handler, metadata, context);
-    } catch (EncryptedDocumentException e) { // NOPMD
+    } catch (EncryptedDocumentException e) { // NOPMD: EmptyCatchBlock
       /*
        * If the document is encrypted we take the data we can get.
        * That should be enough for us.

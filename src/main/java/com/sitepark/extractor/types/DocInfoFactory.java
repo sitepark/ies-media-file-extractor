@@ -5,12 +5,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.mime.MediaType;
 
+/**
+ * {@link FileInfoFactory} implementation that creates {@link DocInfo} objects for document
+ * formats: PDF, RTF, OpenDocument and Microsoft Office (legacy and Open XML).
+ */
 public class DocInfoFactory implements FileInfoFactory<DocInfo> {
 
   private static final Set<MediaType> SUPPORTED_TYPES =
@@ -39,18 +44,37 @@ public class DocInfoFactory implements FileInfoFactory<DocInfo> {
                   MediaType.application("vnd.openxmlformats-officedocument.spreadsheetml"),
                   MediaType.application("vnd.openxmlformats-officedocument.presentationml"))));
 
+  /**
+   * Returns {@code true} if the given MIME type string is among the supported document types.
+   *
+   * @param type the MIME type string to check
+   * @return {@code true} if supported, {@code false} otherwise
+   * @throws NullPointerException if {@code type} is {@code null}
+   */
   public static boolean isSupported(String type) {
+    Objects.requireNonNull(type, "type must not be null");
     MediaType mediaType = MediaType.parse(type);
     return SUPPORTED_TYPES.contains(mediaType);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Set<MediaType> getSupportedTypes() {
     return SUPPORTED_TYPES;
   }
 
+  /**
+   * Creates a {@link DocInfo} by extracting title, description, creation date, last-modification
+   * date and text content from the given Tika {@link Metadata}.
+   *
+   * @param metadata the Tika metadata produced during parsing
+   * @param extractedContent the plain-text content extracted from the document, may be {@code null}
+   * @return a new {@link DocInfo} instance; never {@code null}
+   * @throws NullPointerException if {@code metadata} is {@code null}
+   */
   @Override
   public DocInfo create(Metadata metadata, String extractedContent) {
+    Objects.requireNonNull(metadata, "metadata must not be null");
     return DocInfo.builder()
         .title(this.getTitle(metadata))
         .description(this.getDescription(metadata))

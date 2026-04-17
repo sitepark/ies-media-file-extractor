@@ -3,8 +3,10 @@ package com.sitepark.extractor.types;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Date;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
@@ -24,6 +26,15 @@ class DocInfoFactoryTest {
   @Test
   void testIsNotSupported() {
     assertFalse(DocInfoFactory.isSupported("image/gif"), "gif should not be supported");
+  }
+
+  @Test
+  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
+  void testIsSupportedWithNullType() {
+    assertThrows(
+        NullPointerException.class,
+        () -> DocInfoFactory.isSupported(null),
+        "null type should throw NullPointerException");
   }
 
   @Test
@@ -60,6 +71,15 @@ class DocInfoFactoryTest {
     Metadata metadata = this.createMetadata(TikaCoreProperties.MODIFIED, date);
     DocInfo info = this.factory.create(metadata, null);
     assertEquals(123000L, info.getLastModificationDate(), "unexpected lastModifiedDate");
+  }
+
+  @Test
+  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
+  void testCreateWithNullMetadata() {
+    assertThrows(
+        NullPointerException.class,
+        () -> this.factory.create(null, null),
+        "null metadata should throw NullPointerException");
   }
 
   private Metadata createMetadata(Property name, String value) {

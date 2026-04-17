@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find src/main/java -name \"*.java\" -exec basename {} \\\\;)",
+      "Bash(find src/test/java -name \"*.java\" -exec basename {} \\\\;)",
+      "Bash(cat)",
+      "Bash(bash /tmp/check_javadoc.sh)",
+      "Bash(mvn clean *)"
+    ]
+  }
+}

@@ -5,6 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
 import java.util.Objects;
 
+/**
+ * Immutable value object representing document metadata and extracted text content.
+ *
+ * <p>Use {@link #builder()} to construct instances and {@link #toBuilder()} to create modified
+ * copies. Supports JSON serialization and deserialization via Jackson.
+ */
 @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
@@ -29,22 +35,50 @@ public final class DocInfo extends FileInfo {
     this.extractedContent = builder.extractedContent;
   }
 
+  /**
+   * Returns the document title, or {@code null} if not set.
+   *
+   * @return the title, or {@code null}
+   */
   public String getTitle() {
     return this.title;
   }
 
+  /**
+   * Returns the document description, or {@code null} if not set.
+   *
+   * @return the description, or {@code null}
+   */
   public String getDescription() {
     return this.description;
   }
 
+  /**
+   * Returns the document creation date as milliseconds since the Unix epoch, or {@code null} if
+   * not set.
+   *
+   * @return the creation date in epoch milliseconds, or {@code null}
+   */
   public Long getCreationDate() {
     return this.creationDate;
   }
 
+  /**
+   * Returns the document last-modification date as milliseconds since the Unix epoch, or
+   * {@code null} if not set.
+   *
+   * @return the last-modification date in epoch milliseconds, or {@code null}
+   */
   public Long getLastModificationDate() {
     return this.lastModificationDate;
   }
 
+  /**
+   * Returns the plain-text content extracted from the document, or {@code null} if no content was
+   * extracted or the content was blank.
+   *
+   * @return the extracted content, or {@code null}
+   */
   public String getExtractedContent() {
     return this.extractedContent;
   }
@@ -71,10 +105,20 @@ public final class DocInfo extends FileInfo {
     return hashCode;
   }
 
+  /**
+   * Returns a new builder for {@link DocInfo}.
+   *
+   * @return a new builder instance
+   */
   public static Builder builder() {
     return new Builder();
   }
 
+  /**
+   * Returns a new builder pre-populated with all values from this instance.
+   *
+   * @return a new builder instance
+   */
   public Builder toBuilder() {
     return new Builder(this);
   }
@@ -106,6 +150,7 @@ public final class DocInfo extends FileInfo {
         && Objects.equals(that.getExtractedContent(), this.extractedContent);
   }
 
+  /** Builder for {@link DocInfo}. */
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
 
@@ -129,26 +174,58 @@ public final class DocInfo extends FileInfo {
       this.extractedContent = docInfo.extractedContent;
     }
 
+    /**
+     * Sets the document title.
+     *
+     * @param title the title, may be {@code null}
+     * @return this builder
+     */
     public Builder title(String title) {
       this.title = title;
       return this;
     }
 
+    /**
+     * Sets the document description.
+     *
+     * @param description the description, may be {@code null}
+     * @return this builder
+     */
     public Builder description(String description) {
       this.description = description;
       return this;
     }
 
+    /**
+     * Sets the document creation date.
+     *
+     * @param creationDate the creation date as milliseconds since the Unix epoch, may be
+     *     {@code null}
+     * @return this builder
+     */
     public Builder creationDate(Long creationDate) {
       this.creationDate = creationDate;
       return this;
     }
 
+    /**
+     * Sets the document last-modification date.
+     *
+     * @param lastModificationDate the last-modification date as milliseconds since the Unix epoch,
+     *     may be {@code null}
+     * @return this builder
+     */
     public Builder lastModificationDate(Long lastModificationDate) {
       this.lastModificationDate = lastModificationDate;
       return this;
     }
 
+    /**
+     * Sets the extracted text content. Blank and empty values are normalized to {@code null}.
+     *
+     * @param extractedContent the extracted text, may be {@code null} or blank
+     * @return this builder
+     */
     @SuppressWarnings("PMD.NullAssignment")
     public Builder extractedContent(String extractedContent) {
       if ((extractedContent == null) || extractedContent.isBlank()) {
@@ -159,6 +236,11 @@ public final class DocInfo extends FileInfo {
       return this;
     }
 
+    /**
+     * Builds a new {@link DocInfo} from the current builder state.
+     *
+     * @return a new {@link DocInfo} instance
+     */
     public DocInfo build() {
       return new DocInfo(this);
     }

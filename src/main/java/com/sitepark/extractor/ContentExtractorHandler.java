@@ -5,6 +5,10 @@ import java.io.StringWriter;
 import org.apache.tika.sax.ToTextContentHandler;
 import org.xml.sax.SAXException;
 
+/**
+ * SAX content handler that captures plain text from Tika parsing up to a configurable character
+ * limit, and provides a cleaned-up view of the extracted content.
+ */
 public class ContentExtractorHandler extends ToTextContentHandler {
 
   private final int writeLimit;
@@ -13,6 +17,13 @@ public class ContentExtractorHandler extends ToTextContentHandler {
 
   private boolean writeLimitReached;
 
+  /**
+   * Creates a new handler that writes to the given {@link StringWriter} up to {@code writeLimit}
+   * characters.
+   *
+   * @param writer the writer to which extracted characters are appended
+   * @param writeLimit the maximum number of characters to write; use {@code -1} for no limit
+   */
   @SuppressFBWarnings("EI_EXPOSE_REP2")
   public ContentExtractorHandler(StringWriter writer, int writeLimit) {
     super(writer);
@@ -51,6 +62,15 @@ public class ContentExtractorHandler extends ToTextContentHandler {
     super.characters(ch, start, length);
   }
 
+  /**
+   * Returns the extracted content with all whitespace sequences collapsed to a single space and
+   * leading/trailing whitespace removed.
+   *
+   * <p>Unlike {@link #toString()}, which returns the raw buffered content, this method normalizes
+   * whitespace for use as indexed text.
+   *
+   * @return the cleaned extracted content; never {@code null}
+   */
   public String toTidyString() {
     String s = this.writer.getBuffer().toString();
     return s.replaceAll("\\s+", " ").trim();

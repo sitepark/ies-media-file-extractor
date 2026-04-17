@@ -117,6 +117,33 @@ class ExtractorTest {
   }
 
   @Test
+  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
+  void testExtractWithNullPath() {
+    assertThrows(
+        NullPointerException.class,
+        () -> this.extractor.extract((Path) null),
+        "null path should throw NullPointerException");
+  }
+
+  @Test
+  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
+  void testExtractWithWriteLimitAndNullPath() {
+    assertThrows(
+        NullPointerException.class,
+        () -> this.extractor.extract(null, 100),
+        "null path should throw NullPointerException");
+  }
+
+  @Test
+  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
+  void testIsSupportedWithNullMediaType() {
+    assertThrows(
+        NullPointerException.class,
+        () -> this.extractor.isSupported(null),
+        "null mediaType should throw NullPointerException");
+  }
+
+  @Test
   @SuppressFBWarnings("RV_EXCEPTION_NOT_THROWN")
   void testUnsupported() {
     Path path = Paths.get("src/test/resources/files/unsupported/unsupported");
