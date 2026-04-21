@@ -12,7 +12,7 @@ jobs:
     with:
       pre-build-script:
         |
-        sudo apt-get install -y libvips-tools librsvg2-common
+        sudo apt-get install -y libvips-tools librsvg2-common ghostscript
         vips --version
         dpkg -l | grep -E 'ghostscript|libgs'
         gs --version
