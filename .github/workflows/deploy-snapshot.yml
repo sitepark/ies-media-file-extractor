@@ -10,7 +10,10 @@ jobs:
   deploy:
     uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@release/1.x
     with:
-      pre-build-script: sudo apt-get install -y libvips-tools librsvg2-common ghostscript
+      pre-build-script:
+        |
+        sudo apt-get install -y libvips-tools librsvg2-common ghostscript
+        vipsheader -a src/test/resources/files/images/220221-WF-Logo-CMYK-SW.eps                                                        15:52:20
     secrets:
       MVN_REPO_SNAPSHOT_SERVER_ID: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_ID }}
       MVN_REPO_SNAPSHOT_SERVER_USERNAME: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_USERNAME }}
