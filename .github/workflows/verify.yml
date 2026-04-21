@@ -10,5 +10,5 @@ jobs:
   verify:
     uses: sitepark/github-project-workflow/.github/workflows/maven-verify.yml@release/1.x
     with:
-      pre-build-script: sudo apt-get install -y libvips-tools
+      pre-build-script: sudo apt-get install -y libvips-tools librsvg2-common ghostscript
 

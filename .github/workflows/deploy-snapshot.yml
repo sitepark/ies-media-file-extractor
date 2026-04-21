@@ -10,12 +10,7 @@ jobs:
   deploy:
     uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@release/1.x
     with:
-      pre-build-script:
-        |
-        sudo apt-get install -y libvips-tools librsvg2-common ghostscript
-        vips --version
-        dpkg -l | grep -E 'ghostscript|libgs'
-        gs --version
+      pre-build-script: sudo apt-get install -y libvips-tools librsvg2-common ghostscript
     secrets:
       MVN_REPO_SNAPSHOT_SERVER_ID: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_ID }}
       MVN_REPO_SNAPSHOT_SERVER_USERNAME: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_USERNAME }}
