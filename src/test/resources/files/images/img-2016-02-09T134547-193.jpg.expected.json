@@ -1,0 +1,50 @@
+{
+  "width" : 357,
+  "height" : 500,
+  "hasAlpha" : false,
+  "title" : "Foghorn at the Cape D'Or lighthouse in Nova Scotia",
+  "description" : "Years of harsh exposure have taken their toll on the foghorn at the Cape D'Or lighthouse on Nova Scotia's north western shore.",
+  "copyright" : "Copyright 2006 Rakoczy Photography, All Rights Reserved",
+  "vibrantColors" : {
+    "average" : {
+      "red" : 163,
+      "green" : 155,
+      "blue" : 135
+    },
+    "dominant" : {
+      "red" : 238,
+      "green" : 239,
+      "blue" : 224
+    },
+    "vibrant" : {
+      "red" : 246,
+      "green" : 247,
+      "blue" : 232
+    },
+    "muted" : {
+      "red" : 89,
+      "green" : 99,
+      "blue" : 34
+    },
+    "darkVibrant" : {
+      "red" : 238,
+      "green" : 239,
+      "blue" : 224
+    },
+    "darkMuted" : {
+      "red" : 119,
+      "green" : 97,
+      "blue" : 61
+    },
+    "lightVibrant" : {
+      "red" : 223,
+      "green" : 185,
+      "blue" : 133
+    },
+    "lightMuted" : {
+      "red" : 81,
+      "green" : 90,
+      "blue" : 25
+    }
+  }
+}

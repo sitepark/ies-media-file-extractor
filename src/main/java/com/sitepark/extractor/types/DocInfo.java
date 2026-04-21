@@ -1,8 +1,10 @@
 package com.sitepark.extractor.types;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
+import java.io.Serial;
 import java.util.Objects;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Objects;
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private final String title;
 
@@ -27,7 +29,7 @@ public final class DocInfo extends FileInfo {
 
   private final String extractedContent;
 
-  protected DocInfo(Builder builder) {
+  private DocInfo(Builder builder) {
     this.title = builder.title;
     this.description = builder.description;
     this.creationDate = builder.creationDate;
@@ -40,7 +42,8 @@ public final class DocInfo extends FileInfo {
    *
    * @return the title, or {@code null}
    */
-  public String getTitle() {
+  @JsonProperty
+  public String title() {
     return this.title;
   }
 
@@ -49,7 +52,8 @@ public final class DocInfo extends FileInfo {
    *
    * @return the description, or {@code null}
    */
-  public String getDescription() {
+  @JsonProperty
+  public String description() {
     return this.description;
   }
 
@@ -59,7 +63,8 @@ public final class DocInfo extends FileInfo {
    *
    * @return the creation date in epoch milliseconds, or {@code null}
    */
-  public Long getCreationDate() {
+  @JsonProperty
+  public Long creationDate() {
     return this.creationDate;
   }
 
@@ -69,7 +74,8 @@ public final class DocInfo extends FileInfo {
    *
    * @return the last-modification date in epoch milliseconds, or {@code null}
    */
-  public Long getLastModificationDate() {
+  @JsonProperty
+  public Long lastModificationDate() {
     return this.lastModificationDate;
   }
 
@@ -79,30 +85,19 @@ public final class DocInfo extends FileInfo {
    *
    * @return the extracted content, or {@code null}
    */
-  public String getExtractedContent() {
+  @JsonProperty
+  public String extractedContent() {
     return this.extractedContent;
   }
 
   @Override
   public int hashCode() {
-    int hashCode = 0;
-    if (this.title != null) {
-      hashCode += this.title.hashCode();
-    }
-    if (this.description != null) {
-      hashCode += this.description.hashCode();
-    }
-    if (this.creationDate != null) {
-      hashCode += this.creationDate.hashCode();
-    }
-    if (this.lastModificationDate != null) {
-      hashCode += this.lastModificationDate.hashCode();
-    }
-    if (this.extractedContent != null) {
-      hashCode += this.extractedContent.hashCode();
-    }
-
-    return hashCode;
+    return Objects.hash(
+        this.title,
+        this.description,
+        this.creationDate,
+        this.lastModificationDate,
+        this.extractedContent);
   }
 
   /**
@@ -143,11 +138,11 @@ public final class DocInfo extends FileInfo {
     if (!(o instanceof DocInfo that)) {
       return false;
     }
-    return Objects.equals(that.getTitle(), this.title)
-        && Objects.equals(that.getDescription(), this.description)
-        && Objects.equals(that.getCreationDate(), this.creationDate)
-        && Objects.equals(that.getLastModificationDate(), this.lastModificationDate)
-        && Objects.equals(that.getExtractedContent(), this.extractedContent);
+    return Objects.equals(that.title(), this.title)
+        && Objects.equals(that.description(), this.description)
+        && Objects.equals(that.creationDate(), this.creationDate)
+        && Objects.equals(that.lastModificationDate(), this.lastModificationDate)
+        && Objects.equals(that.extractedContent(), this.extractedContent);
   }
 
   /** Builder for {@link DocInfo}. */

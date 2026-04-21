@@ -3,7 +3,61 @@
 
 # IES media file extractor
 
-For the media management of the CMS IES, the media to be managed are analyzed and, depending on the file type, metadata and, if necessary, also the text contained are read out. This project takes over the task to extract the required data from the files.
+For the media management of the CMS IES, the media to be managed are analyzed and, depending on the file type, metadata
+and — if applicable — the text content are extracted. This library handles that extraction.
+
+## How to use
+
+**Maven dependency**
+
+```xml
+
+<dependency>
+    <groupId>com.sitepark.ies</groupId>
+    <artifactId>ies-media-file-extractor</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+**Extracting metadata**
+
+```java
+import com.sitepark.extractor.types.DocInfo;
+import com.sitepark.extractor.types.ImageInfo;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class Example {
+
+    static void main(String[] args) {
+
+        Path path = Paths.get(args[0]);
+        Extractor extractor = new Extractor();
+
+        try {
+            FileInfo fileInfo = extractor.extract(path);
+
+            if (fileInfo instanceof DocInfo doc) {
+                System.out.println("Title: " + doc.title());
+                System.out.println("Content: " + doc.extractedContent());
+            } else if (fileInfo instanceof ImageInfo img) {
+                System.out.println("Dimensions: " + img.width() + " × " + img.height());
+
+                if (img.vibrantColors() != null) {
+                    System.out.println("Vibrant: " + img.vibrantColors().vibrant());
+                    System.out.println("Dominant: " + img.vibrantColors().dominant());
+                }
+            }
+        } catch (UnsupportedMediaTypeException e) {
+            System.out.println("Unsupported format: " + e.getMessage());
+
+        } catch (ExtractionException e) {
+            System.out.println("Extraction failed: " + e.getMessage());
+        }
+    }
+}
+```
 
 ## How to build
 
@@ -11,49 +65,3 @@ For the media management of the CMS IES, the media to be managed are analyzed an
 mvn install package
 ```
 
-## How to use
-
-Maven-Dependency
-
-```xml
-<dependency>
-	<groupId>com.sitepark.ies</groupId>
-	<artifactId>ies-media-file-extractor</artifactId>
-	<version>1.0.0</version>
-</dependency>
-```
-
-Use extractor
-
-```java
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import com.sitepark.extractor.ContentTypeDetector;
-import com.sitepark.extractor.Extractor;
-import com.sitepark.extractor.types.DocInfo;
-
-public class Main {
-
-	public static void main(String[] argv) throws Exception {
-
-		Path path = Paths.get(argv[0]);
-		ContentTypeDetector detector = new ContentTypeDetector();
-
-		String contentType = detector.detect(path);
-
-		Extractor extractor = new Extractor();
-		if (extractor.isSupported(contentType)) {
-			FileInfo fileInfo = extractor.extract(path);
-			if (fileInfo instanceof DocInfo) {
-				DocInfo docInfo = (DocInfo) fileInfo;
-				System.out.println("Document-Info: " + docInfo);
-			} else {
-				System.out.println("File-Info: " + fileInfo);
-			}
-		} else {
-			System.out.println("Unsupported content-type: " + contentType);
-		}
-	}
-}
-```

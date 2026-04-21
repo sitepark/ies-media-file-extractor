@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sitepark.extractor.test.FileInfoTestParameter;
 import com.sitepark.extractor.types.DocInfo;
+import com.sitepark.extractor.types.ImageInfo;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,11 +21,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,13 +38,25 @@ class ExtractorTest {
 
   private final Extractor extractor = new Extractor();
 
+  @AfterAll
+  static void generateVibrantColorsReport() throws IOException {
+    VibrantColorsReport.generate();
+  }
+
   private static final String EXPECTION_FILE_SUFFIX = ".expected.json";
 
   @ParameterizedTest(name = "[{index}] {0}")
-  @MethodSource("createArguments")
-  void testWithArguments(Path path, DocInfo expected) throws ExtractionException {
+  @MethodSource("createDocsArguments")
+  void testWithDocsArguments(Path path, DocInfo expected) throws ExtractionException {
     DocInfo docInfo = (DocInfo) this.extractor.extract(path);
     assertEquals(expected, docInfo, "unexpected docInfo");
+  }
+
+  @ParameterizedTest(name = "[{index}] {0}")
+  @MethodSource("createImagesArguments")
+  void testWithImagesArguments(Path path, ImageInfo expected) throws ExtractionException {
+    ImageInfo imageInfo = (ImageInfo) this.extractor.extract(path);
+    assertEquals(expected, imageInfo, "unexpected imageInfo");
   }
 
   @Test
@@ -66,9 +82,7 @@ class ExtractorTest {
     DocInfo docInfo = (DocInfo) extractor.extract(path);
 
     assertEquals(
-        10,
-        docInfo.getExtractedContent().length(),
-        "Content should be truncated after 10 characters");
+        10, docInfo.extractedContent().length(), "Content should be truncated after 10 characters");
   }
 
   @Test
@@ -88,7 +102,7 @@ class ExtractorTest {
     Extractor extractor = new Extractor();
 
     DocInfo docInfo = (DocInfo) extractor.extract(path);
-    assertThat(docInfo.getExtractedContent())
+    assertThat(docInfo.extractedContent())
         .withFailMessage("Unexpected content")
         .startsWith("Iseborjer Kinno Pressemitteilung Das");
   }
@@ -99,7 +113,7 @@ class ExtractorTest {
     Parser parser = mock();
     InputStream inputstream = mock();
     Extractor extractor =
-        new Extractor(parser) {
+        new Extractor(parser, List.of()) {
           @Override
           protected InputStream createInputStream(Path path, Metadata metadata) {
             return inputstream;
@@ -155,9 +169,17 @@ class ExtractorTest {
   }
 
   @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
-  private static Stream<FileInfoTestParameter> createArguments() throws IOException {
+  private static Stream<FileInfoTestParameter> createDocsArguments() throws IOException {
+    return createArguments(Paths.get("src/test/resources/files/docs"), DocInfo.class);
+  }
 
-    Path path = Paths.get("src/test/resources/files/docs");
+  @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
+  private static Stream<FileInfoTestParameter> createImagesArguments() throws IOException {
+    return createArguments(Paths.get("src/test/resources/files/images"), ImageInfo.class);
+  }
+
+  private static Stream<FileInfoTestParameter> createArguments(
+      Path path, Class<? extends FileInfo> type) throws IOException {
 
     ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
 
@@ -173,9 +195,9 @@ class ExtractorTest {
           continue;
         }
         Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
-        DocInfo docInfo = mapper.readValue(json.toFile(), DocInfo.class);
+        FileInfo fileInfo = mapper.readValue(json.toFile(), type);
 
-        arguments.add(new FileInfoTestParameter(file, docInfo));
+        arguments.add(new FileInfoTestParameter(file, fileInfo));
       }
     }
 
@@ -183,27 +205,61 @@ class ExtractorTest {
   }
 
   @Test
-  @Disabled // Enable to create and update *.expected.json files
+  // @Disabled // Enable to create and update *.expected.json files
   void createNewExpectedJsonFiles() throws IOException, ExtractionException {
-
-    Path path = Paths.get("src/test/resources/files/docs");
-
     ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
     mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
-    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
-      for (Path file : dirStream) {
-        if (Files.isDirectory(file) || file.toString().endsWith(".expected.json")) {
-          continue;
+    for (Path dir :
+        List.of(
+            Paths.get("src/test/resources/files/docs"),
+            Paths.get("src/test/resources/files/images"))) {
+      try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dir)) {
+        for (Path file : dirStream) {
+          if (Files.isDirectory(file) || file.toString().endsWith(".expected.json")) {
+            continue;
+          }
+          try {
+            FileInfo fileInfo = this.extractor.extract(file);
+            Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
+            mapper.writeValue(json.toFile(), fileInfo);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
-        FileInfo fileInfo = this.extractor.extract(file);
-        Path dir = file.getParent();
-        if (dir == null) {
-          continue;
-        }
-        Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
-        mapper.writeValue(json.toFile(), fileInfo);
       }
+    }
+  }
+
+  private static class CombinedDirectoryStream implements Iterable<Path>, AutoCloseable {
+    private final List<DirectoryStream<Path>> streams;
+
+    public CombinedDirectoryStream(DirectoryStream<Path>... streams) {
+      this.streams = Arrays.asList(streams);
+    }
+
+    @Override
+    public Iterator<Path> iterator() {
+      return streams.stream()
+          .flatMap(stream -> StreamSupport.stream(stream.spliterator(), false))
+          .iterator();
+    }
+
+    @Override
+    public void close() throws IOException {
+      IOException exception = null;
+      for (DirectoryStream<Path> stream : streams) {
+        try {
+          stream.close();
+        } catch (IOException e) {
+          if (exception == null) {
+            exception = e;
+          } else {
+            exception.addSuppressed(e);
+          }
+        }
+      }
+      if (exception != null) throw exception;
     }
   }
 }

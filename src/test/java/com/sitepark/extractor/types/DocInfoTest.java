@@ -24,51 +24,51 @@ class DocInfoTest {
   }
 
   @Test
-  void testGetTitle() {
+  void testTitle() {
     DocInfo docInfo = DocInfo.builder().title("title").build();
-    assertEquals("title", docInfo.getTitle(), "unexpected title");
+    assertEquals("title", docInfo.title(), "unexpected title");
   }
 
   @Test
-  void testGetDescription() {
+  void testDescription() {
     DocInfo docInfo = DocInfo.builder().description("description").build();
-    assertEquals("description", docInfo.getDescription(), "unexpected description");
+    assertEquals("description", docInfo.description(), "unexpected description");
   }
 
   @Test
-  void testGetCreationDate() {
+  void testCreationDate() {
     DocInfo docInfo = DocInfo.builder().creationDate(123L).build();
-    assertEquals(123L, docInfo.getCreationDate(), "unexpected creationDate");
+    assertEquals(123L, docInfo.creationDate(), "unexpected creationDate");
   }
 
   @Test
-  void testGetLastModificationDate() {
+  void testLastModificationDate() {
     DocInfo docInfo = DocInfo.builder().lastModificationDate(123L).build();
-    assertEquals(123L, docInfo.getLastModificationDate(), "unexpected lastModificationDate");
+    assertEquals(123L, docInfo.lastModificationDate(), "unexpected lastModificationDate");
   }
 
   @Test
-  void testGetExtractedContent() {
+  void testExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent("abc").build();
-    assertEquals("abc", docInfo.getExtractedContent(), "unexpected extractedContent");
+    assertEquals("abc", docInfo.extractedContent(), "unexpected extractedContent");
   }
 
   @Test
   void testSetNullExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent(null).build();
-    assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
+    assertNull(docInfo.extractedContent(), "extractedContent should be null");
   }
 
   @Test
   void testSetBlankExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent(" ").build();
-    assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
+    assertNull(docInfo.extractedContent(), "extractedContent should be null");
   }
 
   @Test
   void testWithBlankExtractedContent() {
     DocInfo docInfo = DocInfo.builder().extractedContent("").build();
-    assertNull(docInfo.getExtractedContent(), "extractedContent should be null");
+    assertNull(docInfo.extractedContent(), "extractedContent should be null");
   }
 
   @Test

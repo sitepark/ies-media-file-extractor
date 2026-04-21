@@ -1,6 +1,6 @@
 package com.sitepark.extractor;
 
-import com.sitepark.extractor.types.DocInfoFactory;
+import com.sitepark.extractor.provider.doc.DocInfoProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -23,15 +23,15 @@ import org.xml.sax.SAXException;
 /**
  * Extracts metadata and text content from media files using Apache Tika.
  *
- * <p>By default, supports PDF, Microsoft Office, OpenDocument and RTF formats via
- * {@link DocInfoFactory}. Register additional {@link FileInfoFactory} implementations via the
+ * <p>By default, supports PDF, Microsoft Office, OpenDocument and RTF formats via {@link
+ * DocInfoProvider}. Register additional {@link FileInfoProvider} implementations via the
  * constructors to extend format support.
  *
  * <p>This class is not thread-safe due to the mutable {@code defaultWriteLimit} field.
  */
 public class Extractor {
 
-  private final List<FileInfoFactory<?>> factoryList = new ArrayList<>();
+  private final List<FileInfoProvider<?>> providers = new ArrayList<>();
 
   private final Parser parser;
 
@@ -39,13 +39,11 @@ public class Extractor {
 
   private final Set<MediaType> supportedMediaTypes = new HashSet<>();
 
-  private static final FileInfoFactory<?>[] DEFAULT_FACTORY_LIST = {new DocInfoFactory()};
-
   private static final Parser DEFAULT_PARSER = new AutoDetectParser();
 
   /** Creates an {@code Extractor} with the default set of supported formats. */
   public Extractor() {
-    this(DEFAULT_FACTORY_LIST);
+    this(DefaultProviderFactory.createProviders());
   }
 
   /**
@@ -62,31 +60,31 @@ public class Extractor {
   }
 
   /**
-   * Creates an {@code Extractor} with a custom set of {@link FileInfoFactory} implementations.
+   * Creates an {@code Extractor} with a custom set of {@link FileInfoProvider} implementations.
    *
-   * @param factoryList one or more factories that handle specific media types
+   * @param providers one or more factories that handle specific media types
    */
-  public Extractor(FileInfoFactory<?>... factoryList) {
-    this(DEFAULT_PARSER, factoryList);
+  public Extractor(List<FileInfoProvider<?>> providers) {
+    this(DEFAULT_PARSER, providers);
   }
 
   /**
-   * Creates an {@code Extractor} with a custom Tika {@link Parser} and a custom set of
-   * {@link FileInfoFactory} implementations.
+   * Creates an {@code Extractor} with a custom Tika {@link Parser} and a custom set of {@link
+   * FileInfoProvider} implementations.
    *
    * @param parser the Tika parser to use for content extraction
-   * @param factoryList one or more factories that handle specific media types
+   * @param providers one or more factories that handle specific media types
    */
-  public Extractor(Parser parser, FileInfoFactory<?>... factoryList) {
+  public Extractor(Parser parser, List<FileInfoProvider<?>> providers) {
     this.parser = parser;
-    for (FileInfoFactory<?> factory : factoryList) {
-      this.addFileInfoFactory(factory);
+    for (FileInfoProvider<?> provider : providers) {
+      this.addProvider(provider);
     }
   }
 
-  private void addFileInfoFactory(FileInfoFactory<?> factory) {
-    this.factoryList.add(factory);
-    this.supportedMediaTypes.addAll(factory.getSupportedTypes());
+  private void addProvider(FileInfoProvider<?> provider) {
+    this.providers.add(provider);
+    this.supportedMediaTypes.addAll(provider.getSupportedTypes());
   }
 
   /**
@@ -145,7 +143,7 @@ public class Extractor {
       throw new ExtractionException(path + ": extraction failed", e);
     }
 
-    return this.toFileInfo(metadata, handler);
+    return this.toFileInfo(path, metadata, handler);
   }
 
   private ContentExtractorHandler createContentHandler(int writeLimit) {
@@ -156,7 +154,7 @@ public class Extractor {
     return TikaInputStream.get(path, metadata);
   }
 
-  private FileInfo toFileInfo(Metadata metadata, ContentExtractorHandler handler)
+  private FileInfo toFileInfo(Path path, Metadata metadata, ContentExtractorHandler handler)
       throws ExtractionException, UnsupportedMediaTypeException {
 
     MediaType mediaType = MediaType.parse(metadata.get("Content-Type"));
@@ -164,20 +162,20 @@ public class Extractor {
       throw new ExtractionException("Content-Type not set in metadata");
     }
 
-    FileInfoFactory<?> factory = this.getFileInfoFactory(mediaType);
+    FileInfoProvider<?> provider = this.findProvider(mediaType);
     String extractedContent = handler.toTidyString();
-    return factory.create(metadata, extractedContent);
+    return provider.create(path, metadata, extractedContent);
   }
 
-  private FileInfoFactory<?> getFileInfoFactory(MediaType mediaType)
+  private FileInfoProvider<?> findProvider(MediaType mediaType)
       throws UnsupportedMediaTypeException {
 
-    for (FileInfoFactory<?> factory : this.factoryList) {
-      if (factory.getSupportedTypes().contains(mediaType)) {
-        return factory;
+    for (FileInfoProvider<?> provider : this.providers) {
+      if (provider.getSupportedTypes().contains(mediaType)) {
+        return provider;
       }
     }
 
-    throw new UnsupportedMediaTypeException("No factory for mediaType " + mediaType);
+    throw new UnsupportedMediaTypeException("No provider for mediaType " + mediaType);
   }
 }

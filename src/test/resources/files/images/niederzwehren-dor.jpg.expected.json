@@ -1,0 +1,44 @@
+{
+  "width" : 5616,
+  "height" : 3744,
+  "hasAlpha" : false,
+  "description" : "Büste von Dorothea Viehmann",
+  "copyright" : "Stadt Kassel",
+  "vibrantColors" : {
+    "average" : {
+      "red" : 153,
+      "green" : 143,
+      "blue" : 131
+    },
+    "dominant" : {
+      "red" : 213,
+      "green" : 182,
+      "blue" : 167
+    },
+    "vibrant" : {
+      "red" : 225,
+      "green" : 196,
+      "blue" : 177
+    },
+    "muted" : {
+      "red" : 90,
+      "green" : 109,
+      "blue" : 37
+    },
+    "darkVibrant" : {
+      "red" : 179,
+      "green" : 195,
+      "blue" : 210
+    },
+    "darkMuted" : {
+      "red" : 75,
+      "green" : 61,
+      "blue" : 51
+    },
+    "lightVibrant" : {
+      "red" : 247,
+      "green" : 214,
+      "blue" : 183
+    }
+  }
+}

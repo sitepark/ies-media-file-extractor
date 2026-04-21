@@ -1,0 +1,37 @@
+{
+  "width" : 1963,
+  "height" : 142,
+  "hasAlpha" : false,
+  "vibrantColors" : {
+    "average" : {
+      "red" : 231,
+      "green" : 149,
+      "blue" : 152
+    },
+    "dominant" : {
+      "red" : 255,
+      "green" : 255,
+      "blue" : 255
+    },
+    "vibrant" : {
+      "red" : 254,
+      "green" : 251,
+      "blue" : 251
+    },
+    "darkVibrant" : {
+      "red" : 255,
+      "green" : 255,
+      "blue" : 255
+    },
+    "lightVibrant" : {
+      "red" : 253,
+      "green" : 245,
+      "blue" : 246
+    },
+    "lightMuted" : {
+      "red" : 195,
+      "green" : 0,
+      "blue" : 3
+    }
+  }
+}

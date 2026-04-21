@@ -1,0 +1,47 @@
+{
+  "width" : 494,
+  "height" : 510,
+  "hasAlpha" : true,
+  "vibrantColors" : {
+    "average" : {
+      "red" : 151,
+      "green" : 122,
+      "blue" : 92
+    },
+    "dominant" : {
+      "red" : 1,
+      "green" : 1,
+      "blue" : 0
+    },
+    "vibrant" : {
+      "red" : 190,
+      "green" : 121,
+      "blue" : 64
+    },
+    "muted" : {
+      "red" : 113,
+      "green" : 64,
+      "blue" : 24
+    },
+    "darkVibrant" : {
+      "red" : 242,
+      "green" : 238,
+      "blue" : 235
+    },
+    "darkMuted" : {
+      "red" : 58,
+      "green" : 51,
+      "blue" : 40
+    },
+    "lightVibrant" : {
+      "red" : 245,
+      "green" : 211,
+      "blue" : 189
+    },
+    "lightMuted" : {
+      "red" : 168,
+      "green" : 91,
+      "blue" : 34
+    }
+  }
+}

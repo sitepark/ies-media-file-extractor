@@ -11,6 +11,12 @@
 			pattern="REC_CATCH_EXCEPTION,RV_CHECK_FOR_POSITIVE_INDEXOF,BC_UNCONFIRMED_CAST_OF_RETURN_VALUE,THROWS_METHOD_THROWS_CLAUSE_THROWABLE,PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES,PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_FIELD_NAMES" />
 	</Match>
 
+	<!-- HSL hue computation uses exact equality for boundary color channels (valid by design) -->
+	<Match>
+		<Class name="com.sitepark.extractor.provider.image.ColorCalculator" />
+		<Bug pattern="FE_FLOATING_POINT_EQUALITY" />
+	</Match>
+
 	<!-- False positive: https://github.com/spotbugs/spotbugs/issues/2628 -->
 	<Match>
 		<Class name="~.*\.*Test" />

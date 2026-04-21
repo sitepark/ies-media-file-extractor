@@ -8,6 +8,7 @@ jobs:
     with:
       botName: "sitepark-bot"
       botEmail: "opensource@sitepark.com"
+      pre-build-script: sudo apt-get install -y libvips-tools
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}

@@ -9,6 +9,8 @@ on:
 jobs:
   deploy:
     uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@release/1.x
+    with:
+      pre-build-script: sudo apt-get install -y libvips-tools
     secrets:
       MVN_REPO_SNAPSHOT_SERVER_ID: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_ID }}
       MVN_REPO_SNAPSHOT_SERVER_USERNAME: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_USERNAME }}

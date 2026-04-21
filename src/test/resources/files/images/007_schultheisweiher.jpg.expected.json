@@ -1,0 +1,44 @@
+{
+  "width" : 3000,
+  "height" : 2000,
+  "hasAlpha" : false,
+  "description" : "Roter Amikrebs im Schultheisweiher, 190718\nSergej Justus (Umweltamt OF)\n*****************************************************\ncopyright by:\ngeorg-foto, offenbach\nBernd Georg (Fotodesigner)\nGauss-Str. 5, Postfach 100628\nD-63071 Offenbach am Main\nTel. +49-69-98557977 FAX:+49-69-98557988\nmobil: +49-171-3367112\nVeroeffentlichung meines Bildmateriales nur gegen Honorar (zzgl.MwSt.),\nBelegexemplar und Namesnennung.\nUst.ID: 035 821 01115 Finanzamt Offenbach-Stadt\nBankverbindung: Sparkasse Offenbach\nBLZ.: 505 500 20 Kto.-Nr.: 107054383",
+  "copyright" : "georg-foto,offenbach am main",
+  "vibrantColors" : {
+    "average" : {
+      "red" : 130,
+      "green" : 135,
+      "blue" : 124
+    },
+    "dominant" : {
+      "red" : 44,
+      "green" : 47,
+      "blue" : 24
+    },
+    "vibrant" : {
+      "red" : 219,
+      "green" : 226,
+      "blue" : 243
+    },
+    "muted" : {
+      "red" : 93,
+      "green" : 98,
+      "blue" : 42
+    },
+    "darkVibrant" : {
+      "red" : 188,
+      "green" : 196,
+      "blue" : 219
+    },
+    "darkMuted" : {
+      "red" : 89,
+      "green" : 91,
+      "blue" : 60
+    },
+    "lightVibrant" : {
+      "red" : 236,
+      "green" : 239,
+      "blue" : 252
+    }
+  }
+}

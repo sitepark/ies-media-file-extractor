@@ -5,7 +5,12 @@
       "Bash(find src/test/java -name \"*.java\" -exec basename {} \\\\;)",
       "Bash(cat)",
       "Bash(bash /tmp/check_javadoc.sh)",
-      "Bash(mvn clean *)"
+      "Bash(mvn clean *)",
+      "Bash(mvn dependency:tree -f /home/veltrup/git/ies-media-file-extractor/pom.xml)",
+      "Bash(mvn pmd:check -f /home/veltrup/git/ies-media-file-extractor/pom.xml)",
+      "Bash(mvn jacoco:report -f /home/veltrup/git/ies-media-file-extractor/pom.xml -q)",
+      "Bash(mvn verify *)",
+      "Bash(mvn spotless:apply -q)"
     ]
   }
 }

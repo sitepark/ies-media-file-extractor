@@ -1,9 +1,11 @@
 package com.sitepark.extractor;
 
+import java.io.Serial;
+
 /** Thrown when a media file cannot be parsed or its content cannot be extracted. */
 public class ExtractionException extends Exception {
 
-  private static final long serialVersionUID = -2475991392211002674L;
+  @Serial private static final long serialVersionUID = -2475991392211002674L;
 
   /**
    * Creates a new {@code ExtractionException} with the given message.

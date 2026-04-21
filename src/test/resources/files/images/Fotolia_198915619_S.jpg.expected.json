@@ -1,0 +1,45 @@
+{
+  "width" : 849,
+  "height" : 566,
+  "hasAlpha" : false,
+  "title" : "Male student and his Muslim classmate using laptop in library",
+  "description" : "Male student and his Muslim classmate using laptop in library",
+  "copyright" : "© Africa Studio - stock.adobe.com und andere Zeichen öäü€",
+  "vibrantColors" : {
+    "average" : {
+      "red" : 185,
+      "green" : 174,
+      "blue" : 168
+    },
+    "dominant" : {
+      "red" : 254,
+      "green" : 254,
+      "blue" : 254
+    },
+    "vibrant" : {
+      "red" : 244,
+      "green" : 235,
+      "blue" : 229
+    },
+    "muted" : {
+      "red" : 124,
+      "green" : 125,
+      "blue" : 36
+    },
+    "darkVibrant" : {
+      "red" : 242,
+      "green" : 246,
+      "blue" : 247
+    },
+    "darkMuted" : {
+      "red" : 68,
+      "green" : 46,
+      "blue" : 36
+    },
+    "lightVibrant" : {
+      "red" : 108,
+      "green" : 210,
+      "blue" : 237
+    }
+  }
+}
