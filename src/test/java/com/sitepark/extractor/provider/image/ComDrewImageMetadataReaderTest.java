@@ -3,8 +3,10 @@ package com.sitepark.extractor.provider.image;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.drew.imaging.FileType;
 import com.drew.metadata.iptc.IptcDirectory;
 import com.sitepark.extractor.ExtractionException;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class ComDrewImageMetadataReaderTest {
 
+  private static final MediaType JPEG = MediaType.image("jpeg");
   private static final Path MONA_LISA = Paths.get("src/test/resources/files/images/Mona_Lisa.jpg");
 
   private ComDrewImageMetadataReader reader;
@@ -25,45 +28,46 @@ class ComDrewImageMetadataReaderTest {
   @Test
   void testApplyDataFromFileWithoutIptc() throws ExtractionException {
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(MONA_LISA, builder);
+    this.reader.applyData(MONA_LISA, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().build(),
+        ImageInfo.builder().type("jpeg").build(),
         builder.build(),
         "ImageInfo without IPTC metadata should be empty");
   }
 
   @Test
   void testApplyDataWithIptcCopyright() {
-    com.drew.metadata.Metadata metadata =
-        this.createMetadata(IptcDirectory.TAG_COPYRIGHT_NOTICE, "© 2024 Sitepark");
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createReaderResult(IptcDirectory.TAG_COPYRIGHT_NOTICE, "© 2024 Sitepark");
+
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().copyright("© 2024 Sitepark").build(),
+        ImageInfo.builder().type("jpeg").copyright("© 2024 Sitepark").build(),
         builder.build(),
         "copyright should be read from IPTC TAG_COPYRIGHT_NOTICE");
   }
 
   @Test
   void testApplyDataWithIptcHeadlineAsTitle() {
-    com.drew.metadata.Metadata metadata =
-        this.createMetadata(IptcDirectory.TAG_HEADLINE, "Breaking News");
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createReaderResult(IptcDirectory.TAG_HEADLINE, "Breaking News");
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().title("Breaking News").build(),
+        ImageInfo.builder().type("jpeg").title("Breaking News").build(),
         builder.build(),
         "title should be read from IPTC TAG_HEADLINE");
   }
 
   @Test
   void testApplyDataWithIptcObjectNameAsTitle() {
-    com.drew.metadata.Metadata metadata =
-        this.createMetadata(IptcDirectory.TAG_OBJECT_NAME, "Photo Title");
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createReaderResult(IptcDirectory.TAG_OBJECT_NAME, "Photo Title");
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().title("Photo Title").build(),
+        ImageInfo.builder().type("jpeg").title("Photo Title").build(),
         builder.build(),
         "title should fall back to IPTC TAG_OBJECT_NAME when no headline is set");
   }
@@ -76,34 +80,37 @@ class ComDrewImageMetadataReaderTest {
     com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
     metadata.addDirectory(iptcDir);
 
+    ComDrewImageMetadataReader.ReaderResult result =
+        new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
+
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().title("Headline Title").build(),
+        ImageInfo.builder().type("jpeg").title("Headline Title").build(),
         builder.build(),
         "TAG_HEADLINE should take precedence over TAG_OBJECT_NAME as title");
   }
 
   @Test
   void testApplyDataWithIptcDescription() {
-    com.drew.metadata.Metadata metadata =
-        this.createMetadata(IptcDirectory.TAG_CAPTION, "A landscape photo.");
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createReaderResult(IptcDirectory.TAG_CAPTION, "A landscape photo.");
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().description("A landscape photo.").build(),
+        ImageInfo.builder().type("jpeg").description("A landscape photo.").build(),
         builder.build(),
         "description should be read from IPTC TAG_CAPTION");
   }
 
   @Test
   void testApplyDataWithIptcMultilineDescription() {
-    com.drew.metadata.Metadata metadata =
-        this.createMetadata(IptcDirectory.TAG_CAPTION, "Line one\nLine two\nLine three");
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createReaderResult(IptcDirectory.TAG_CAPTION, "Line one\nLine two\nLine three");
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().description("Line one\nLine two\nLine three").build(),
+        ImageInfo.builder().type("jpeg").description("Line one\nLine two\nLine three").build(),
         builder.build(),
         "multiline IPTC description should be preserved with newlines");
   }
@@ -116,10 +123,13 @@ class ComDrewImageMetadataReaderTest {
     com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
     metadata.addDirectory(iptcDir);
 
+    ComDrewImageMetadataReader.ReaderResult result =
+        new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
+
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().build(),
+        ImageInfo.builder().type("jpeg").build(),
         builder.build(),
         "blank IPTC values should not be applied to ImageInfo");
   }
@@ -130,7 +140,7 @@ class ComDrewImageMetadataReaderTest {
     ImageInfo.Builder builder = ImageInfo.builder();
     assertThrows(
         ExtractionException.class,
-        () -> this.reader.applyData(missing, builder),
+        () -> this.reader.applyData(missing, JPEG, builder),
         "reading a non-existent file should throw ExtractionException");
   }
 
@@ -141,19 +151,23 @@ class ComDrewImageMetadataReaderTest {
     com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
     metadata.addDirectory(iptcDir);
 
+    ComDrewImageMetadataReader.ReaderResult result =
+        new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
+
     ImageInfo.Builder builder = ImageInfo.builder();
-    this.reader.applyData(metadata, builder);
+    this.reader.applyData(result, JPEG, builder);
     assertEquals(
-        ImageInfo.builder().build(),
+        ImageInfo.builder().type("jpeg").build(),
         builder.build(),
         "blank TAG_OBJECT_NAME should not be applied as title");
   }
 
-  private com.drew.metadata.Metadata createMetadata(int tagType, String value) {
+  private ComDrewImageMetadataReader.ReaderResult createReaderResult(int tagType, String value) {
     IptcDirectory iptcDir = new IptcDirectory();
     iptcDir.setObject(tagType, value);
     com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
     metadata.addDirectory(iptcDir);
-    return metadata;
+
+    return new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
   }
 }

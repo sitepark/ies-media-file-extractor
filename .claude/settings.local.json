@@ -10,7 +10,9 @@
       "Bash(mvn pmd:check -f /home/veltrup/git/ies-media-file-extractor/pom.xml)",
       "Bash(mvn jacoco:report -f /home/veltrup/git/ies-media-file-extractor/pom.xml -q)",
       "Bash(mvn verify *)",
-      "Bash(mvn spotless:apply -q)"
+      "Bash(mvn spotless:apply -q)",
+      "Bash(mvn spotbugs:check)",
+      "Bash(mvn compile *)"
     ]
   }
 }

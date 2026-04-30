@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.sitepark.extractor.ExtractionException;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.nio.file.Path;
@@ -31,12 +32,13 @@ class ImageInfoProviderTest {
 
   @Test
   void testIsSupported() {
-    assertTrue(ImageInfoProvider.isSupported("image/jpeg"), "jpeg should be supported");
+    assertTrue(ImageInfoProvider.isSupported(MediaType.image("jpeg")), "jpeg should be supported");
   }
 
   @Test
   void testIsNotSupported() {
-    assertFalse(ImageInfoProvider.isSupported("application/pdf"), "pdf should not be supported");
+    assertFalse(
+        ImageInfoProvider.isSupported(MediaType.application("pdf")), "pdf should not be supported");
   }
 
   @Test
@@ -51,8 +53,9 @@ class ImageInfoProviderTest {
   @Test
   void testCreateCallsMetadataReader() throws ExtractionException {
     Path path = Path.of("test.jpg");
-    this.provider.create(path, new Metadata(), null);
-    verify(this.comDrewImageMetadataReader).applyData(eq(path), any(ImageInfo.Builder.class));
+    this.provider.create(path, MediaType.image("jpeg"), new Metadata(), null);
+    verify(this.comDrewImageMetadataReader)
+        .applyData(eq(path), any(MediaType.class), any(ImageInfo.Builder.class));
   }
 
   @Test
@@ -60,7 +63,7 @@ class ImageInfoProviderTest {
   void testCreateWithNullMetadata() {
     assertThrows(
         NullPointerException.class,
-        () -> this.provider.create(Path.of("test.jpg"), null, null),
+        () -> this.provider.create(Path.of("test.jpg"), MediaType.image("jpeg"), null, null),
         "null metadata should throw NullPointerException");
   }
 }

@@ -1,4 +1,10 @@
 {
+  "mediaType" : {
+    "type" : "image",
+    "subtype" : "svg+xml",
+    "parameters" : { }
+  },
+  "type" : "svg",
   "width" : 313,
   "height" : 275,
   "hasAlpha" : true,

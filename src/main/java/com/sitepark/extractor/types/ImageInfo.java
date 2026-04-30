@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.values.VibrantColors;
 import java.io.Serial;
 import java.util.Objects;
@@ -20,6 +21,9 @@ public final class ImageInfo extends FileInfo {
 
   @Serial private static final long serialVersionUID = 1L;
 
+  private final MediaType mediaType;
+
+  private final String type;
   private final int width;
   private final int height;
   private final boolean hasAlpha;
@@ -29,6 +33,8 @@ public final class ImageInfo extends FileInfo {
   private final VibrantColors vibrantColors;
 
   private ImageInfo(Builder builder) {
+    this.mediaType = builder.mediaType;
+    this.type = builder.type;
     this.width = builder.width;
     this.height = builder.height;
     this.hasAlpha = builder.hasAlpha;
@@ -36,6 +42,26 @@ public final class ImageInfo extends FileInfo {
     this.description = builder.description;
     this.copyright = builder.copyright;
     this.vibrantColors = builder.vibrantColors;
+  }
+
+  /**
+   * Returns the media type, or {@code null} if not set.
+   *
+   * @return the media type, or {@code null}
+   */
+  @JsonProperty
+  public MediaType mediaType() {
+    return this.mediaType;
+  }
+
+  /**
+   * Returns the image type.
+   *
+   * @return the image type
+   */
+  @JsonProperty
+  public String type() {
+    return this.type;
   }
 
   /**
@@ -129,6 +155,8 @@ public final class ImageInfo extends FileInfo {
   @Override
   public int hashCode() {
     return Objects.hash(
+        this.mediaType,
+        this.type,
         this.width,
         this.height,
         this.hasAlpha,
@@ -141,6 +169,8 @@ public final class ImageInfo extends FileInfo {
   @Override
   public boolean equals(Object o) {
     return (o instanceof ImageInfo that)
+        && Objects.equals(this.mediaType, that.mediaType())
+        && Objects.equals(this.type, that.type())
         && this.width == that.width()
         && this.height == that.height()
         && this.hasAlpha == that.hasAlpha()
@@ -152,27 +182,38 @@ public final class ImageInfo extends FileInfo {
 
   @Override
   public String toString() {
-    return "ImageInfo [width="
-        + this.width
+    return "ImageInfo{"
+        + "mediaType="
+        + mediaType
+        + ", type='"
+        + type
+        + '\''
+        + ", width="
+        + width
         + ", height="
-        + this.height
+        + height
         + ", hasAlpha="
-        + this.hasAlpha
-        + ", title="
-        + this.title
-        + ", description="
-        + this.description
-        + ", copyright="
-        + this.copyright
+        + hasAlpha
+        + ", title='"
+        + title
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", copyright='"
+        + copyright
+        + '\''
         + ", vibrantColors="
-        + this.vibrantColors
-        + "]";
+        + vibrantColors
+        + '}';
   }
 
   /** Builder for {@link ImageInfo}. */
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
 
+    private MediaType mediaType;
+    private String type;
     private int width;
     private int height;
     private boolean hasAlpha;
@@ -184,6 +225,8 @@ public final class ImageInfo extends FileInfo {
     private Builder() {}
 
     private Builder(ImageInfo imageInfo) {
+      this.mediaType = imageInfo.mediaType();
+      this.type = imageInfo.type();
       this.width = imageInfo.width();
       this.height = imageInfo.height();
       this.hasAlpha = imageInfo.hasAlpha();
@@ -191,6 +234,28 @@ public final class ImageInfo extends FileInfo {
       this.description = imageInfo.description();
       this.copyright = imageInfo.copyright();
       this.vibrantColors = imageInfo.vibrantColors();
+    }
+
+    /**
+     * Sets the media type.
+     *
+     * @param mediaType the media type, may be {@code null}
+     * @return this builder
+     */
+    public Builder mediaType(MediaType mediaType) {
+      this.mediaType = mediaType;
+      return this;
+    }
+
+    /**
+     * Sets the image type.
+     *
+     * @param type the image type
+     * @return this builder
+     */
+    public Builder type(String type) {
+      this.type = type;
+      return this;
     }
 
     /**

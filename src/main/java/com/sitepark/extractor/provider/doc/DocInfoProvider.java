@@ -2,6 +2,7 @@ package com.sitepark.extractor.provider.doc;
 
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.FileInfoProvider;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.DocInfo;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -13,11 +14,10 @@ import java.util.Set;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
-import org.apache.tika.mime.MediaType;
 
 /**
- * {@link FileInfoProvider} implementation that creates {@link DocInfo} objects for document formats:
- * PDF, RTF, OpenDocument and Microsoft Office (legacy and Open XML).
+ * {@link FileInfoProvider} implementation that creates {@link DocInfo} objects for document
+ * formats: PDF, RTF, OpenDocument and Microsoft Office (legacy and Open XML).
  */
 public class DocInfoProvider implements FileInfoProvider<DocInfo> {
 
@@ -50,13 +50,12 @@ public class DocInfoProvider implements FileInfoProvider<DocInfo> {
   /**
    * Returns {@code true} if the given MIME type string is among the supported document types.
    *
-   * @param type the MIME type string to check
+   * @param mediaType the MIME type string to check
    * @return {@code true} if supported, {@code false} otherwise
    * @throws NullPointerException if {@code type} is {@code null}
    */
-  public static boolean isSupported(String type) {
-    Objects.requireNonNull(type, "type must not be null");
-    MediaType mediaType = MediaType.parse(type);
+  public static boolean isSupported(MediaType mediaType) {
+    Objects.requireNonNull(mediaType, "type must not be null");
     return SUPPORTED_TYPES.contains(mediaType);
   }
 
@@ -76,10 +75,11 @@ public class DocInfoProvider implements FileInfoProvider<DocInfo> {
    * @throws NullPointerException if {@code metadata} is {@code null}
    */
   @Override
-  public DocInfo create(Path path, Metadata metadata, String extractedContent)
+  public DocInfo create(Path path, MediaType mediaType, Metadata metadata, String extractedContent)
       throws ExtractionException {
     Objects.requireNonNull(metadata, "metadata must not be null");
     return DocInfo.builder()
+        .mediaType(mediaType)
         .title(this.getTitle(metadata))
         .description(this.getDescription(metadata))
         .creationDate(this.getCreationDate(metadata))

@@ -1,4 +1,9 @@
 {
+  "mediaType" : {
+    "type" : "application",
+    "subtype" : "vnd.openxmlformats-officedocument.presentationml.presentation",
+    "parameters" : { }
+  },
   "title" : "Sample PowerPoint File",
   "creationDate" : 1241647569000,
   "lastModificationDate" : 1241648010000,

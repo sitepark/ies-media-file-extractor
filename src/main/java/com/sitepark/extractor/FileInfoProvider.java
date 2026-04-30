@@ -3,7 +3,6 @@ package com.sitepark.extractor;
 import java.nio.file.Path;
 import java.util.Set;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
 
 /**
  * Strategy interface for creating {@link FileInfo} instances from Tika parsing results.
@@ -25,9 +24,12 @@ public interface FileInfoProvider<T extends FileInfo> {
   /**
    * Creates a {@link FileInfo} from the given Tika metadata and extracted text content.
    *
+   * @param path the file path; must not be {@code null}
+   * @param mediaType the media type of the file; must not be {@code null}
    * @param metadata the Tika metadata produced during parsing; must not be {@code null}
    * @param extractedContent the plain-text content extracted from the file, may be {@code null}
    * @return a new {@link FileInfo} instance; never {@code null}
    */
-  T create(Path path, Metadata metadata, String extractedContent) throws ExtractionException;
+  T create(Path path, MediaType mediaType, Metadata metadata, String extractedContent)
+      throws ExtractionException;
 }

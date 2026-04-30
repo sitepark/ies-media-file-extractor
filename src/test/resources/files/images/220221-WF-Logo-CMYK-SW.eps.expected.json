@@ -1,4 +1,10 @@
 {
+  "mediaType" : {
+    "type" : "application",
+    "subtype" : "postscript",
+    "parameters" : { }
+  },
+  "type" : "eps",
   "width" : 464,
   "height" : 245,
   "hasAlpha" : false,

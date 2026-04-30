@@ -9,7 +9,9 @@ import com.drew.metadata.file.FileSystemMetadataReader;
 import com.drew.metadata.file.FileTypeDirectory;
 import com.drew.metadata.iptc.IptcDirectory;
 import com.sitepark.extractor.ExtractionException;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,22 +22,32 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Reads IPTC metadata (title, description, copyright) from image files using the
- * <a href="https://drewnoakes.com/code/exif/">drewnoakes metadata-extractor</a> library and
- * applies the values to an {@link ImageInfo.Builder}.
+ * Reads IPTC metadata (title, description, copyright) from image files using the <a
+ * href="https://drewnoakes.com/code/exif/">drewnoakes metadata-extractor</a> library and applies
+ * the values to an {@link ImageInfo.Builder}.
  */
 public class ComDrewImageMetadataReader {
 
-  public void applyData(Path path, ImageInfo.Builder builder) throws ExtractionException {
-    com.drew.metadata.Metadata imageMetadata = this.readImageMetadata(path);
-    this.applyData(imageMetadata, builder);
+  public void applyData(Path path, MediaType mediaType, ImageInfo.Builder builder)
+      throws ExtractionException {
+    ReaderResult result = this.readImageMetadata(path);
+    this.applyData(result, mediaType, builder);
   }
 
-  void applyData(com.drew.metadata.Metadata imageMetadata, ImageInfo.Builder builder) {
+  void applyData(ReaderResult result, MediaType mediaType, ImageInfo.Builder builder) {
     Collection<IptcDirectory> iptcDirectories =
-        imageMetadata.getDirectoriesOfType(IptcDirectory.class);
+        result.metadata().getDirectoriesOfType(IptcDirectory.class);
+
+    if (result.fileType() != FileType.Unknown) {
+      builder.type(result.fileType().getName().toLowerCase(Locale.ROOT));
+    } else if (mediaType.subtype().equals("svg+xml")) {
+      builder.type("svg");
+    } else {
+      builder.type(mediaType.subtype().toLowerCase(Locale.ROOT));
+    }
 
     for (IptcDirectory iptc : iptcDirectories) {
       String iptcCopyright = iptc.getDescription(IptcDirectory.TAG_COPYRIGHT_NOTICE);
@@ -69,21 +81,19 @@ public class ComDrewImageMetadataReader {
     }
   }
 
-  private com.drew.metadata.Metadata readImageMetadata(@NotNull Path path)
-      throws ExtractionException {
+  private ReaderResult readImageMetadata(@NotNull Path path) throws ExtractionException {
 
     try (InputStream inputStream = Files.newInputStream(path)) {
-      com.drew.metadata.Metadata metadata = this.readImageMetadata(inputStream, Files.size(path));
-      (new FileSystemMetadataReader()).read(path.toFile(), metadata);
-      return metadata;
+      ReaderResult result = this.readImageMetadata(inputStream, Files.size(path));
+      (new FileSystemMetadataReader()).read(path.toFile(), result.metadata());
+      return result;
     } catch (IOException | ImageProcessingException e) {
       throw new ExtractionException("Unable to read image metadata", e);
     }
   }
 
   @NotNull
-  private com.drew.metadata.Metadata readImageMetadata(
-      @NotNull InputStream inputStream, long streamLength)
+  private ReaderResult readImageMetadata(@NotNull InputStream inputStream, long streamLength)
       throws ImageProcessingException, IOException {
     BufferedInputStream bufferedInputStream =
         inputStream instanceof BufferedInputStream
@@ -91,12 +101,13 @@ public class ComDrewImageMetadataReader {
             : new BufferedInputStream(inputStream);
     FileType fileType = FileTypeDetector.detectFileType(bufferedInputStream);
     if (fileType == FileType.Unknown) {
-      return new com.drew.metadata.Metadata();
+      return new ReaderResult(fileType, new com.drew.metadata.Metadata());
     }
+
     com.drew.metadata.Metadata metadata =
         ImageMetadataReader.readMetadata(bufferedInputStream, streamLength, fileType);
     metadata.addDirectory(new FileTypeDirectory(fileType));
-    return metadata;
+    return new ReaderResult(fileType, metadata);
   }
 
   private String normalizeString(String s) {
@@ -125,6 +136,14 @@ public class ComDrewImageMetadataReader {
       return String.join("\n", lines);
     } catch (IOException e) {
       return this.normalizeString(s);
+    }
+  }
+
+  protected record ReaderResult(FileType fileType, com.drew.metadata.Metadata metadata) {
+    @SuppressFBWarnings("EI_EXPOSE_REP")
+    @Override
+    public com.drew.metadata.Metadata metadata() {
+      return this.metadata;
     }
   }
 }

@@ -14,7 +14,6 @@ import org.apache.tika.exception.EncryptedDocumentException;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
@@ -155,7 +154,7 @@ public class Extractor {
   }
 
   private FileInfo toFileInfo(Path path, Metadata metadata, ContentExtractorHandler handler)
-      throws ExtractionException, UnsupportedMediaTypeException {
+      throws ExtractionException {
 
     MediaType mediaType = MediaType.parse(metadata.get("Content-Type"));
     if (mediaType == null) {
@@ -164,7 +163,7 @@ public class Extractor {
 
     FileInfoProvider<?> provider = this.findProvider(mediaType);
     String extractedContent = handler.toTidyString();
-    return provider.create(path, metadata, extractedContent);
+    return provider.create(path, mediaType, metadata, extractedContent);
   }
 
   private FileInfoProvider<?> findProvider(MediaType mediaType)

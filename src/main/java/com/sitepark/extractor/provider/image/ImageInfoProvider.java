@@ -2,6 +2,7 @@ package com.sitepark.extractor.provider.image;
 
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.FileInfoProvider;
+import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -10,7 +11,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MediaType;
 
 /**
  * {@link FileInfoProvider} implementation that creates {@link ImageInfo} objects for image formats
@@ -74,13 +74,12 @@ public class ImageInfoProvider implements FileInfoProvider<ImageInfo> {
   /**
    * Returns {@code true} if the given MIME type string is among the supported image types.
    *
-   * @param type the MIME type string to check
+   * @param mediaType the MIME type string to check
    * @return {@code true} if supported, {@code false} otherwise
    * @throws NullPointerException if {@code type} is {@code null}
    */
-  public static boolean isSupported(String type) {
-    Objects.requireNonNull(type, "type must not be null");
-    MediaType mediaType = MediaType.parse(type);
+  public static boolean isSupported(MediaType mediaType) {
+    Objects.requireNonNull(mediaType, "type must not be null");
     return SUPPORTED_TYPES.contains(mediaType);
   }
 
@@ -99,12 +98,13 @@ public class ImageInfoProvider implements FileInfoProvider<ImageInfo> {
    * @throws NullPointerException if {@code metadata} is {@code null}
    */
   @Override
-  public ImageInfo create(Path path, Metadata metadata, String extractedContent)
+  public ImageInfo create(
+      Path path, MediaType mediaType, Metadata metadata, String extractedContent)
       throws ExtractionException {
     Objects.requireNonNull(metadata, "metadata must not be null");
 
-    ImageInfo.Builder builder = ImageInfo.builder();
-    this.comDrewImageMetadataReader.applyData(path, builder);
+    ImageInfo.Builder builder = ImageInfo.builder().mediaType(mediaType);
+    this.comDrewImageMetadataReader.applyData(path, mediaType, builder);
     this.vipsExtractor.applyData(path, builder);
     return builder.build();
   }

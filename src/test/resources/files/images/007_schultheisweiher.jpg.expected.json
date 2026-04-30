@@ -1,4 +1,10 @@
 {
+  "mediaType" : {
+    "type" : "image",
+    "subtype" : "jpeg",
+    "parameters" : { }
+  },
+  "type" : "jpeg",
   "width" : 3000,
   "height" : 2000,
   "hasAlpha" : false,

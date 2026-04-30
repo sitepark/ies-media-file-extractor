@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
+import com.sitepark.extractor.MediaType;
 import java.io.Serial;
 import java.util.Objects;
 
@@ -19,6 +20,8 @@ public final class DocInfo extends FileInfo {
 
   @Serial private static final long serialVersionUID = 1L;
 
+  private final MediaType mediaType;
+
   private final String title;
 
   private final String description;
@@ -30,11 +33,22 @@ public final class DocInfo extends FileInfo {
   private final String extractedContent;
 
   private DocInfo(Builder builder) {
+    this.mediaType = builder.mediaType;
     this.title = builder.title;
     this.description = builder.description;
     this.creationDate = builder.creationDate;
     this.lastModificationDate = builder.lastModificationDate;
     this.extractedContent = builder.extractedContent;
+  }
+
+  /**
+   * Returns the media type, or {@code null} if not set.
+   *
+   * @return the media type, or {@code null}
+   */
+  @JsonProperty
+  public MediaType mediaType() {
+    return this.mediaType;
   }
 
   /**
@@ -58,8 +72,8 @@ public final class DocInfo extends FileInfo {
   }
 
   /**
-   * Returns the document creation date as milliseconds since the Unix epoch, or {@code null} if
-   * not set.
+   * Returns the document creation date as milliseconds since the Unix epoch, or {@code null} if not
+   * set.
    *
    * @return the creation date in epoch milliseconds, or {@code null}
    */
@@ -69,8 +83,8 @@ public final class DocInfo extends FileInfo {
   }
 
   /**
-   * Returns the document last-modification date as milliseconds since the Unix epoch, or
-   * {@code null} if not set.
+   * Returns the document last-modification date as milliseconds since the Unix epoch, or {@code
+   * null} if not set.
    *
    * @return the last-modification date in epoch milliseconds, or {@code null}
    */
@@ -93,6 +107,7 @@ public final class DocInfo extends FileInfo {
   @Override
   public int hashCode() {
     return Objects.hash(
+        this.mediaType,
         this.title,
         this.description,
         this.creationDate,
@@ -120,7 +135,9 @@ public final class DocInfo extends FileInfo {
 
   @Override
   public String toString() {
-    return "DocInfo [title="
+    return "DocInfo [mediaType="
+        + this.mediaType
+        + ", title="
         + this.title
         + ", description="
         + this.description
@@ -138,7 +155,8 @@ public final class DocInfo extends FileInfo {
     if (!(o instanceof DocInfo that)) {
       return false;
     }
-    return Objects.equals(that.title(), this.title)
+    return Objects.equals(that.mediaType(), this.mediaType)
+        && Objects.equals(that.title(), this.title)
         && Objects.equals(that.description(), this.description)
         && Objects.equals(that.creationDate(), this.creationDate)
         && Objects.equals(that.lastModificationDate(), this.lastModificationDate)
@@ -148,6 +166,8 @@ public final class DocInfo extends FileInfo {
   /** Builder for {@link DocInfo}. */
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
+
+    private MediaType mediaType;
 
     private String title;
 
@@ -162,11 +182,23 @@ public final class DocInfo extends FileInfo {
     private Builder() {}
 
     private Builder(DocInfo docInfo) {
+      this.mediaType = docInfo.mediaType;
       this.title = docInfo.title;
       this.description = docInfo.description;
       this.creationDate = docInfo.creationDate;
       this.lastModificationDate = docInfo.lastModificationDate;
       this.extractedContent = docInfo.extractedContent;
+    }
+
+    /**
+     * Sets the media type.
+     *
+     * @param mediaType the media type, may be {@code null}
+     * @return this builder
+     */
+    public Builder mediaType(MediaType mediaType) {
+      this.mediaType = mediaType;
+      return this;
     }
 
     /**
@@ -194,8 +226,8 @@ public final class DocInfo extends FileInfo {
     /**
      * Sets the document creation date.
      *
-     * @param creationDate the creation date as milliseconds since the Unix epoch, may be
-     *     {@code null}
+     * @param creationDate the creation date as milliseconds since the Unix epoch, may be {@code
+     *     null}
      * @return this builder
      */
     public Builder creationDate(Long creationDate) {

@@ -6,14 +6,15 @@ import com.sitepark.extractor.values.ColorPalette;
 import com.sitepark.extractor.values.ColorPaletteEntry;
 import com.sitepark.extractor.values.RgbColor;
 import com.sitepark.extractor.values.VibrantColors;
+import com.sitepark.vips.command.Extract;
 import com.sitepark.vips.command.ExtractResult;
 import com.sitepark.vips.manager.VipsClientPool;
 import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Extracts image dimensions, alpha-channel presence and vibrant colours from image files using
- * <a href="https://www.libvips.org/">libvips</a> via a {@link VipsClientPool}.
+ * Extracts image dimensions, alpha-channel presence and vibrant colours from image files using <a
+ * href="https://www.libvips.org/">libvips</a> via a {@link VipsClientPool}.
  */
 public class VipsExtractor {
 
@@ -34,7 +35,8 @@ public class VipsExtractor {
    */
   public void applyData(Path path, ImageInfo.Builder builder) throws ExtractionException {
     try {
-      ExtractResult result = this.vipsClientPool.extract(path, COLORS_PALETTE_BIT_DEPTH);
+      ExtractResult result =
+          this.vipsClientPool.execute(Extract.of(path, COLORS_PALETTE_BIT_DEPTH));
       builder
           .width(result.width())
           .height(result.height())

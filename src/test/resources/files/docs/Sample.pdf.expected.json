@@ -1,4 +1,9 @@
 {
+  "mediaType" : {
+    "type" : "application",
+    "subtype" : "pdf",
+    "parameters" : { }
+  },
   "title" : "PDF Metadata Sample",
   "description" : "Test Document",
   "creationDate" : 1440146541000,
