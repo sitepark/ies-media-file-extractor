@@ -15,24 +15,24 @@
       "blue" : 115
     },
     "dominant" : {
-      "red" : 32,
-      "green" : 29,
-      "blue" : 30
+      "red" : 48,
+      "green" : 38,
+      "blue" : 45
     },
     "vibrant" : {
-      "red" : 30,
-      "green" : 75,
-      "blue" : 91
+      "red" : 129,
+      "green" : 85,
+      "blue" : 59
     },
     "darkVibrant" : {
-      "red" : 195,
-      "green" : 212,
-      "blue" : 218
+      "red" : 199,
+      "green" : 214,
+      "blue" : 219
     },
     "darkMuted" : {
-      "red" : 104,
-      "green" : 76,
-      "blue" : 65
+      "red" : 102,
+      "green" : 73,
+      "blue" : 57
     }
   }
 }

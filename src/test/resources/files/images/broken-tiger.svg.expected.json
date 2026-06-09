@@ -15,39 +15,39 @@
       "blue" : 92
     },
     "dominant" : {
-      "red" : 1,
+      "red" : 2,
       "green" : 1,
-      "blue" : 0
+      "blue" : 1
     },
     "vibrant" : {
-      "red" : 190,
-      "green" : 121,
-      "blue" : 64
+      "red" : 242,
+      "green" : 229,
+      "blue" : 217
     },
     "muted" : {
-      "red" : 113,
-      "green" : 64,
-      "blue" : 24
+      "red" : 98,
+      "green" : 82,
+      "blue" : 29
     },
     "darkVibrant" : {
-      "red" : 242,
-      "green" : 238,
-      "blue" : 235
+      "red" : 251,
+      "green" : 251,
+      "blue" : 250
     },
     "darkMuted" : {
-      "red" : 58,
-      "green" : 51,
-      "blue" : 40
+      "red" : 46,
+      "green" : 36,
+      "blue" : 26
     },
     "lightVibrant" : {
-      "red" : 245,
-      "green" : 211,
-      "blue" : 189
+      "red" : 241,
+      "green" : 202,
+      "blue" : 176
     },
     "lightMuted" : {
-      "red" : 168,
-      "green" : 91,
-      "blue" : 34
+      "red" : 110,
+      "green" : 151,
+      "blue" : 27
     }
   }
 }

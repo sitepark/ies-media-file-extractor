@@ -11,8 +11,8 @@
   "vibrantColors" : {
     "average" : {
       "red" : 231,
-      "green" : 149,
-      "blue" : 152
+      "green" : 150,
+      "blue" : 153
     },
     "dominant" : {
       "red" : 255,
@@ -20,9 +20,9 @@
       "blue" : 255
     },
     "vibrant" : {
-      "red" : 254,
-      "green" : 251,
-      "blue" : 251
+      "red" : 253,
+      "green" : 249,
+      "blue" : 249
     },
     "darkVibrant" : {
       "red" : 255,
@@ -30,14 +30,14 @@
       "blue" : 255
     },
     "lightVibrant" : {
-      "red" : 253,
-      "green" : 245,
-      "blue" : 246
+      "red" : 254,
+      "green" : 250,
+      "blue" : 250
     },
     "lightMuted" : {
-      "red" : 195,
-      "green" : 0,
-      "blue" : 3
+      "red" : 197,
+      "green" : 6,
+      "blue" : 10
     }
   }
 }

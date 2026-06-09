@@ -10,9 +10,9 @@
   "hasAlpha" : true,
   "vibrantColors" : {
     "average" : {
-      "red" : 25,
-      "green" : 25,
-      "blue" : 25
+      "red" : 24,
+      "green" : 24,
+      "blue" : 24
     },
     "dominant" : {
       "red" : 0,
@@ -30,9 +30,9 @@
       "blue" : 255
     },
     "darkMuted" : {
-      "red" : 72,
-      "green" : 72,
-      "blue" : 72
+      "red" : 73,
+      "green" : 73,
+      "blue" : 73
     }
   }
 }

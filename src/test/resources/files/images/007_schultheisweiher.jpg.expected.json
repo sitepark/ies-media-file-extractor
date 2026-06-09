@@ -12,39 +12,39 @@
   "copyright" : "georg-foto,offenbach am main",
   "vibrantColors" : {
     "average" : {
-      "red" : 130,
+      "red" : 129,
       "green" : 135,
       "blue" : 124
     },
     "dominant" : {
-      "red" : 44,
-      "green" : 47,
-      "blue" : 24
+      "red" : 234,
+      "green" : 238,
+      "blue" : 251
     },
     "vibrant" : {
-      "red" : 219,
-      "green" : 226,
-      "blue" : 243
+      "red" : 220,
+      "green" : 227,
+      "blue" : 245
     },
     "muted" : {
-      "red" : 93,
-      "green" : 98,
-      "blue" : 42
+      "red" : 124,
+      "green" : 131,
+      "blue" : 43
     },
     "darkVibrant" : {
-      "red" : 188,
-      "green" : 196,
-      "blue" : 219
+      "red" : 174,
+      "green" : 184,
+      "blue" : 206
     },
     "darkMuted" : {
-      "red" : 89,
-      "green" : 91,
-      "blue" : 60
+      "red" : 78,
+      "green" : 81,
+      "blue" : 45
     },
     "lightVibrant" : {
-      "red" : 236,
-      "green" : 239,
-      "blue" : 252
+      "red" : 234,
+      "green" : 238,
+      "blue" : 251
     }
   }
 }

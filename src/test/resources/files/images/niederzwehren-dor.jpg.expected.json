@@ -12,39 +12,44 @@
   "copyright" : "Stadt Kassel",
   "vibrantColors" : {
     "average" : {
-      "red" : 153,
+      "red" : 154,
       "green" : 143,
       "blue" : 131
     },
     "dominant" : {
-      "red" : 213,
-      "green" : 182,
-      "blue" : 167
+      "red" : 146,
+      "green" : 113,
+      "blue" : 97
     },
     "vibrant" : {
-      "red" : 225,
-      "green" : 196,
-      "blue" : 177
+      "red" : 226,
+      "green" : 208,
+      "blue" : 185
     },
     "muted" : {
       "red" : 90,
-      "green" : 109,
-      "blue" : 37
+      "green" : 101,
+      "blue" : 34
     },
     "darkVibrant" : {
-      "red" : 179,
-      "green" : 195,
-      "blue" : 210
+      "red" : 182,
+      "green" : 198,
+      "blue" : 215
     },
     "darkMuted" : {
       "red" : 75,
-      "green" : 61,
-      "blue" : 51
+      "green" : 53,
+      "blue" : 43
     },
     "lightVibrant" : {
-      "red" : 247,
-      "green" : 214,
-      "blue" : 183
+      "red" : 244,
+      "green" : 210,
+      "blue" : 180
+    },
+    "lightMuted" : {
+      "red" : 54,
+      "green" : 73,
+      "blue" : 20
     }
   }
 }

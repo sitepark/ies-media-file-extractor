@@ -11,43 +11,38 @@
   "vibrantColors" : {
     "average" : {
       "red" : 94,
-      "green" : 84,
-      "blue" : 70
+      "green" : 85,
+      "blue" : 71
     },
     "dominant" : {
       "red" : 1,
-      "green" : 0,
-      "blue" : 0
+      "green" : 1,
+      "blue" : 1
     },
     "vibrant" : {
-      "red" : 239,
-      "green" : 227,
-      "blue" : 210
+      "red" : 243,
+      "green" : 231,
+      "blue" : 213
     },
     "muted" : {
-      "red" : 149,
-      "green" : 92,
-      "blue" : 41
+      "red" : 91,
+      "green" : 61,
+      "blue" : 34
     },
     "darkVibrant" : {
-      "red" : 224,
-      "green" : 217,
+      "red" : 228,
+      "green" : 219,
       "blue" : 208
     },
     "darkMuted" : {
-      "red" : 56,
-      "green" : 51,
-      "blue" : 48
+      "red" : 49,
+      "green" : 34,
+      "blue" : 21
     },
     "lightVibrant" : {
-      "red" : 251,
-      "green" : 235,
-      "blue" : 214
-    },
-    "lightMuted" : {
-      "red" : 1,
-      "green" : 0,
-      "blue" : 0
+      "red" : 230,
+      "green" : 150,
+      "blue" : 74
     }
   }
 }

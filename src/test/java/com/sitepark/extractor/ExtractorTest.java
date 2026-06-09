@@ -29,6 +29,7 @@ import java.util.stream.StreamSupport;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -205,7 +206,8 @@ class ExtractorTest {
   }
 
   @Test
-  // @Disabled // Enable to create and update *.expected.json files
+  // Enable to create and update *.expected.json files
+  @Disabled
   void createNewExpectedJsonFiles() throws IOException, ExtractionException {
     ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
     mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
