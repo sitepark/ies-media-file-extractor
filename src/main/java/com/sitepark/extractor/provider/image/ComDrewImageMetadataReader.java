@@ -1,7 +1,6 @@
 package com.sitepark.extractor.provider.image;
 
 import com.adobe.internal.xmp.XMPException;
-import com.adobe.internal.xmp.XMPMeta;
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
@@ -96,12 +95,8 @@ public class ComDrewImageMetadataReader {
   }
 
   private String readDigitalSourceType(XmpDirectory xmp) {
-    XMPMeta xmpMeta = xmp.getXMPMeta();
-    if (xmpMeta == null) {
-      return null;
-    }
     try {
-      return xmpMeta.getPropertyString(IPTC_EXT_NAMESPACE, DIGITAL_SOURCE_TYPE);
+      return xmp.getXMPMeta().getPropertyString(IPTC_EXT_NAMESPACE, DIGITAL_SOURCE_TYPE);
     } catch (XMPException e) {
       return null;
     }

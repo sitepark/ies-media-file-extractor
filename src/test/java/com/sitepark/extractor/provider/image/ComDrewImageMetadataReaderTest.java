@@ -2,8 +2,13 @@ package com.sitepark.extractor.provider.image;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import com.adobe.internal.xmp.XMPError;
 import com.adobe.internal.xmp.XMPException;
+import com.adobe.internal.xmp.XMPIterator;
 import com.adobe.internal.xmp.XMPMeta;
 import com.adobe.internal.xmp.XMPMetaFactory;
 import com.drew.imaging.FileType;
@@ -219,6 +224,30 @@ class ComDrewImageMetadataReaderTest {
         ImageInfo.builder().type("jpeg").build(),
         builder.build(),
         "XMP without DigitalSourceType should not set digitalSourceType");
+  }
+
+  @Test
+  void testApplyDataIgnoresUnreadableXmpDigitalSourceType() throws XMPException {
+    XMPMeta xmpMeta = mock(XMPMeta.class);
+    when(xmpMeta.iterator(any())).thenReturn(mock(XMPIterator.class));
+    when(xmpMeta.getPropertyString(
+            ComDrewImageMetadataReader.IPTC_EXT_NAMESPACE,
+            ComDrewImageMetadataReader.DIGITAL_SOURCE_TYPE))
+        .thenThrow(new XMPException("broken xmp", XMPError.BADXMP));
+    XmpDirectory xmpDir = new XmpDirectory();
+    xmpDir.setXMPMeta(xmpMeta);
+    com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
+    metadata.addDirectory(xmpDir);
+
+    ComDrewImageMetadataReader.ReaderResult result =
+        new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
+
+    ImageInfo.Builder builder = ImageInfo.builder();
+    this.reader.applyData(result, JPEG, builder);
+    assertEquals(
+        ImageInfo.builder().type("jpeg").build(),
+        builder.build(),
+        "unreadable XMP DigitalSourceType should be ignored");
   }
 
   private ComDrewImageMetadataReader.ReaderResult createXmpReaderResult(String digitalSourceType)
