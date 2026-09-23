@@ -3,8 +3,12 @@ package com.sitepark.extractor.provider.image;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.adobe.internal.xmp.XMPException;
+import com.adobe.internal.xmp.XMPMeta;
+import com.adobe.internal.xmp.XMPMetaFactory;
 import com.drew.imaging.FileType;
 import com.drew.metadata.iptc.IptcDirectory;
+import com.drew.metadata.xmp.XmpDirectory;
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
@@ -17,6 +21,10 @@ class ComDrewImageMetadataReaderTest {
 
   private static final MediaType JPEG = MediaType.image("jpeg");
   private static final Path MONA_LISA = Paths.get("src/test/resources/files/images/Mona_Lisa.jpg");
+  private static final Path DIGITAL_SOURCE_TYPE_IMAGE =
+      Paths.get("src/test/resources/files/metadata/digital-source-type.jpg");
+  private static final String TRAINED_ALGORITHMIC_MEDIA =
+      "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia";
 
   private ComDrewImageMetadataReader reader;
 
@@ -160,6 +168,72 @@ class ComDrewImageMetadataReaderTest {
         ImageInfo.builder().type("jpeg").build(),
         builder.build(),
         "blank TAG_OBJECT_NAME should not be applied as title");
+  }
+
+  @Test
+  void testApplyDataFromFileWithXmpDigitalSourceType() throws ExtractionException {
+    ImageInfo.Builder builder = ImageInfo.builder();
+    this.reader.applyData(DIGITAL_SOURCE_TYPE_IMAGE, JPEG, builder);
+    assertEquals(
+        ImageInfo.builder().type("jpeg").digitalSourceType(TRAINED_ALGORITHMIC_MEDIA).build(),
+        builder.build(),
+        "digitalSourceType should be read from the XMP metadata of the file");
+  }
+
+  @Test
+  void testApplyDataWithXmpDigitalSourceType() throws XMPException {
+    ComDrewImageMetadataReader.ReaderResult result =
+        this.createXmpReaderResult("  " + TRAINED_ALGORITHMIC_MEDIA + "  ");
+    ImageInfo.Builder builder = ImageInfo.builder();
+    this.reader.applyData(result, JPEG, builder);
+    assertEquals(
+        ImageInfo.builder().type("jpeg").digitalSourceType(TRAINED_ALGORITHMIC_MEDIA).build(),
+        builder.build(),
+        "digitalSourceType should be read from XMP Iptc4xmpExt:DigitalSourceType");
+  }
+
+  @Test
+  void testApplyDataIgnoresEmptyXmpDigitalSourceType() throws XMPException {
+    ComDrewImageMetadataReader.ReaderResult result = this.createXmpReaderResult("  ");
+    ImageInfo.Builder builder = ImageInfo.builder();
+    this.reader.applyData(result, JPEG, builder);
+    assertEquals(
+        ImageInfo.builder().type("jpeg").build(),
+        builder.build(),
+        "blank XMP DigitalSourceType should not be applied to ImageInfo");
+  }
+
+  @Test
+  void testApplyDataWithXmpWithoutDigitalSourceType() {
+    XmpDirectory xmpDir = new XmpDirectory();
+    xmpDir.setXMPMeta(XMPMetaFactory.create());
+    com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
+    metadata.addDirectory(xmpDir);
+
+    ComDrewImageMetadataReader.ReaderResult result =
+        new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
+
+    ImageInfo.Builder builder = ImageInfo.builder();
+    this.reader.applyData(result, JPEG, builder);
+    assertEquals(
+        ImageInfo.builder().type("jpeg").build(),
+        builder.build(),
+        "XMP without DigitalSourceType should not set digitalSourceType");
+  }
+
+  private ComDrewImageMetadataReader.ReaderResult createXmpReaderResult(String digitalSourceType)
+      throws XMPException {
+    XMPMeta xmpMeta = XMPMetaFactory.create();
+    xmpMeta.setProperty(
+        ComDrewImageMetadataReader.IPTC_EXT_NAMESPACE,
+        ComDrewImageMetadataReader.DIGITAL_SOURCE_TYPE,
+        digitalSourceType);
+    XmpDirectory xmpDir = new XmpDirectory();
+    xmpDir.setXMPMeta(xmpMeta);
+    com.drew.metadata.Metadata metadata = new com.drew.metadata.Metadata();
+    metadata.addDirectory(xmpDir);
+
+    return new ComDrewImageMetadataReader.ReaderResult(FileType.Jpeg, metadata);
   }
 
   private ComDrewImageMetadataReader.ReaderResult createReaderResult(int tagType, String value) {
