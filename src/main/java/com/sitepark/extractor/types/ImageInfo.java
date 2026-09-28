@@ -30,6 +30,7 @@ public final class ImageInfo extends FileInfo {
   private final String title;
   private final String description;
   private final String copyright;
+  private final String digitalSourceType;
   private final VibrantColors vibrantColors;
 
   private ImageInfo(Builder builder) {
@@ -41,6 +42,7 @@ public final class ImageInfo extends FileInfo {
     this.title = builder.title;
     this.description = builder.description;
     this.copyright = builder.copyright;
+    this.digitalSourceType = builder.digitalSourceType;
     this.vibrantColors = builder.vibrantColors;
   }
 
@@ -125,6 +127,17 @@ public final class ImageInfo extends FileInfo {
   }
 
   /**
+   * Returns the image digitalSourceType from xmp metadata, or {@code null} if
+   * not set.
+   *
+   * @return the digitalSourceType or {@code null}
+   */
+  @JsonProperty
+  public String digitalSourceType() {
+    return this.digitalSourceType;
+  }
+
+  /**
    * Returns the vibrant color analysis result, or {@code null} if not set.
    *
    * @return the {@link VibrantColors}, or {@code null}
@@ -163,6 +176,7 @@ public final class ImageInfo extends FileInfo {
         this.title,
         this.description,
         this.copyright,
+        this.digitalSourceType,
         this.vibrantColors);
   }
 
@@ -177,6 +191,7 @@ public final class ImageInfo extends FileInfo {
         && Objects.equals(this.title, that.title())
         && Objects.equals(this.description, that.description())
         && Objects.equals(this.copyright, that.copyright())
+        && Objects.equals(this.digitalSourceType, that.digitalSourceType())
         && Objects.equals(this.vibrantColors, that.vibrantColors());
   }
 
@@ -203,6 +218,9 @@ public final class ImageInfo extends FileInfo {
         + ", copyright='"
         + copyright
         + '\''
+        + ", digitalSourceType='"
+        + digitalSourceType
+        + '\''
         + ", vibrantColors="
         + vibrantColors
         + '}';
@@ -220,6 +238,7 @@ public final class ImageInfo extends FileInfo {
     private String title;
     private String description;
     private String copyright;
+    private String digitalSourceType;
     private VibrantColors vibrantColors;
 
     private Builder() {}
@@ -233,6 +252,7 @@ public final class ImageInfo extends FileInfo {
       this.title = imageInfo.title();
       this.description = imageInfo.description();
       this.copyright = imageInfo.copyright();
+      this.digitalSourceType = imageInfo.digitalSourceType();
       this.vibrantColors = imageInfo.vibrantColors();
     }
 
@@ -321,6 +341,17 @@ public final class ImageInfo extends FileInfo {
      */
     public Builder copyright(String copyright) {
       this.copyright = copyright;
+      return this;
+    }
+
+    /**
+     * Sets the image digitalSourceType.
+     *
+     * @param digitalSourceType the digitalSourceType, may be {@code null}
+     * @return this builder
+     */
+    public Builder digitalSourceType(String digitalSourceType) {
+      this.digitalSourceType = digitalSourceType;
       return this;
     }
 
