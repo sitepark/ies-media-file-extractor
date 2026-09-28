@@ -1,5 +1,6 @@
 package com.sitepark.extractor.provider.image;
 
+import com.adobe.internal.xmp.XMPException;
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
@@ -8,6 +9,7 @@ import com.drew.lang.annotations.NotNull;
 import com.drew.metadata.file.FileSystemMetadataReader;
 import com.drew.metadata.file.FileTypeDirectory;
 import com.drew.metadata.iptc.IptcDirectory;
+import com.drew.metadata.xmp.XmpDirectory;
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
@@ -25,11 +27,15 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Reads IPTC metadata (title, description, copyright) from image files using the <a
- * href="https://drewnoakes.com/code/exif/">drewnoakes metadata-extractor</a> library and applies
- * the values to an {@link ImageInfo.Builder}.
+ * Reads IPTC metadata (title, description, copyright) and the XMP digital source type from image
+ * files using the <a href="https://drewnoakes.com/code/exif/">drewnoakes metadata-extractor</a>
+ * library and applies the values to an {@link ImageInfo.Builder}.
  */
 public class ComDrewImageMetadataReader {
+
+  static final String IPTC_EXT_NAMESPACE = "http://iptc.org/std/Iptc4xmpExt/2008-02-29/";
+
+  static final String DIGITAL_SOURCE_TYPE = "DigitalSourceType";
 
   public void applyData(Path path, MediaType mediaType, ImageInfo.Builder builder)
       throws ExtractionException {
@@ -78,6 +84,21 @@ public class ComDrewImageMetadataReader {
       if (iptcCaptionAbstract != null && !iptcCaptionAbstract.isEmpty()) {
         builder.description(iptcCaptionAbstract);
       }
+    }
+
+    for (XmpDirectory xmp : result.metadata().getDirectoriesOfType(XmpDirectory.class)) {
+      String digitalSourceType = this.normalizeString(this.readDigitalSourceType(xmp));
+      if (digitalSourceType != null && !digitalSourceType.isEmpty()) {
+        builder.digitalSourceType(digitalSourceType);
+      }
+    }
+  }
+
+  private String readDigitalSourceType(XmpDirectory xmp) {
+    try {
+      return xmp.getXMPMeta().getPropertyString(IPTC_EXT_NAMESPACE, DIGITAL_SOURCE_TYPE);
+    } catch (XMPException e) {
+      return null;
     }
   }
 
