@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sitepark.extractor.test.FileInfoTestParameter;
 import com.sitepark.extractor.types.DocInfo;
 import com.sitepark.extractor.types.ImageInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -21,11 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.Parser;
 import org.junit.jupiter.api.AfterAll;
@@ -36,6 +32,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 @SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnitTestShouldIncludeAssert"})
 class ExtractorTest {
+
+  private static final System.Logger LOGGER = System.getLogger(ExtractorTest.class.getName());
 
   private final Extractor extractor = new Extractor();
 
@@ -132,7 +130,6 @@ class ExtractorTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testExtractWithNullPath() {
     assertThrows(
         NullPointerException.class,
@@ -141,7 +138,6 @@ class ExtractorTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testExtractWithWriteLimitAndNullPath() {
     assertThrows(
         NullPointerException.class,
@@ -150,7 +146,6 @@ class ExtractorTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testIsSupportedWithNullMediaType() {
     assertThrows(
         NullPointerException.class,
@@ -159,7 +154,6 @@ class ExtractorTest {
   }
 
   @Test
-  @SuppressFBWarnings("RV_EXCEPTION_NOT_THROWN")
   void testUnsupported() {
     Path path = Paths.get("src/test/resources/files/unsupported/unsupported");
     assertThrows(
@@ -169,12 +163,10 @@ class ExtractorTest {
         });
   }
 
-  @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
   private static Stream<FileInfoTestParameter> createDocsArguments() throws IOException {
     return createArguments(Paths.get("src/test/resources/files/docs"), DocInfo.class);
   }
 
-  @SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
   private static Stream<FileInfoTestParameter> createImagesArguments() throws IOException {
     return createArguments(Paths.get("src/test/resources/files/images"), ImageInfo.class);
   }
@@ -225,43 +217,12 @@ class ExtractorTest {
             FileInfo fileInfo = this.extractor.extract(file);
             Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
             mapper.writeValue(json.toFile(), fileInfo);
-          } catch (Exception e) {
-            e.printStackTrace();
+          } catch (ExtractionException | IOException e) {
+            LOGGER.log(
+                System.Logger.Level.WARNING, "Unable to create expected file for " + file, e);
           }
         }
       }
-    }
-  }
-
-  private static class CombinedDirectoryStream implements Iterable<Path>, AutoCloseable {
-    private final List<DirectoryStream<Path>> streams;
-
-    public CombinedDirectoryStream(DirectoryStream<Path>... streams) {
-      this.streams = Arrays.asList(streams);
-    }
-
-    @Override
-    public Iterator<Path> iterator() {
-      return streams.stream()
-          .flatMap(stream -> StreamSupport.stream(stream.spliterator(), false))
-          .iterator();
-    }
-
-    @Override
-    public void close() throws IOException {
-      IOException exception = null;
-      for (DirectoryStream<Path> stream : streams) {
-        try {
-          stream.close();
-        } catch (IOException e) {
-          if (exception == null) {
-            exception = e;
-          } else {
-            exception.addSuppressed(e);
-          }
-        }
-      }
-      if (exception != null) throw exception;
     }
   }
 }

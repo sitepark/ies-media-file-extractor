@@ -1,14 +1,15 @@
 package com.sitepark.extractor.values;
 
 import java.io.Serializable;
+import org.jspecify.annotations.Nullable;
 
 public record VibrantColors(
     RgbColor average,
-    RgbColor dominant,
-    RgbColor vibrant,
-    RgbColor muted,
-    RgbColor darkVibrant,
-    RgbColor darkMuted,
-    RgbColor lightVibrant,
-    RgbColor lightMuted)
+    @Nullable RgbColor dominant,
+    @Nullable RgbColor vibrant,
+    @Nullable RgbColor muted,
+    @Nullable RgbColor darkVibrant,
+    @Nullable RgbColor darkMuted,
+    @Nullable RgbColor lightVibrant,
+    @Nullable RgbColor lightMuted)
     implements Serializable {}

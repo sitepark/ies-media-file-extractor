@@ -8,6 +8,7 @@ import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.values.VibrantColors;
 import java.io.Serial;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Immutable value object representing image metadata.
@@ -15,24 +16,27 @@ import java.util.Objects;
  * <p>Use {@link #builder()} to construct instances and {@link #toBuilder()} to create modified
  * copies. Supports JSON serialization and deserialization via Jackson.
  */
-@SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
+// TooManyMethods: value object with one accessor per property plus builder
+@SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName", "PMD.TooManyMethods"})
 @JsonDeserialize(builder = ImageInfo.Builder.class)
 public final class ImageInfo extends FileInfo {
 
   @Serial private static final long serialVersionUID = 1L;
 
-  private final MediaType mediaType;
+  private final @Nullable MediaType mediaType;
 
-  private final String type;
+  private final @Nullable String type;
   private final int width;
   private final int height;
   private final boolean hasAlpha;
-  private final String title;
-  private final String description;
-  private final String copyright;
-  private final String digitalSourceType;
-  private final VibrantColors vibrantColors;
+  private final @Nullable String title;
+  private final @Nullable String description;
+  private final @Nullable String copyright;
+  private final @Nullable String digitalSourceType;
+  private final @Nullable VibrantColors vibrantColors;
 
+  // LawOfDemeter: copying the builder state is the purpose of this constructor
+  @SuppressWarnings("PMD.LawOfDemeter")
   private ImageInfo(Builder builder) {
     this.mediaType = builder.mediaType;
     this.type = builder.type;
@@ -52,7 +56,7 @@ public final class ImageInfo extends FileInfo {
    * @return the media type, or {@code null}
    */
   @JsonProperty
-  public MediaType mediaType() {
+  public @Nullable MediaType mediaType() {
     return this.mediaType;
   }
 
@@ -62,7 +66,7 @@ public final class ImageInfo extends FileInfo {
    * @return the image type
    */
   @JsonProperty
-  public String type() {
+  public @Nullable String type() {
     return this.type;
   }
 
@@ -102,7 +106,7 @@ public final class ImageInfo extends FileInfo {
    * @return the title, or {@code null}
    */
   @JsonProperty
-  public String title() {
+  public @Nullable String title() {
     return this.title;
   }
 
@@ -112,7 +116,7 @@ public final class ImageInfo extends FileInfo {
    * @return the description, or {@code null}
    */
   @JsonProperty
-  public String description() {
+  public @Nullable String description() {
     return this.description;
   }
 
@@ -122,7 +126,7 @@ public final class ImageInfo extends FileInfo {
    * @return the copyright, or {@code null}
    */
   @JsonProperty
-  public String copyright() {
+  public @Nullable String copyright() {
     return this.copyright;
   }
 
@@ -133,7 +137,7 @@ public final class ImageInfo extends FileInfo {
    * @return the digitalSourceType or {@code null}
    */
   @JsonProperty
-  public String digitalSourceType() {
+  public @Nullable String digitalSourceType() {
     return this.digitalSourceType;
   }
 
@@ -143,7 +147,7 @@ public final class ImageInfo extends FileInfo {
    * @return the {@link VibrantColors}, or {@code null}
    */
   @JsonProperty
-  public VibrantColors vibrantColors() {
+  public @Nullable VibrantColors vibrantColors() {
     return this.vibrantColors;
   }
 
@@ -230,19 +234,20 @@ public final class ImageInfo extends FileInfo {
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
 
-    private MediaType mediaType;
-    private String type;
+    private @Nullable MediaType mediaType;
+    private @Nullable String type;
     private int width;
     private int height;
     private boolean hasAlpha;
-    private String title;
-    private String description;
-    private String copyright;
-    private String digitalSourceType;
-    private VibrantColors vibrantColors;
+    private @Nullable String title;
+    private @Nullable String description;
+    private @Nullable String copyright;
+    private @Nullable String digitalSourceType;
+    private @Nullable VibrantColors vibrantColors;
 
     private Builder() {}
 
+    // LawOfDemeter: copying the value object state is the purpose of this constructor
     private Builder(ImageInfo imageInfo) {
       this.mediaType = imageInfo.mediaType();
       this.type = imageInfo.type();
@@ -262,7 +267,7 @@ public final class ImageInfo extends FileInfo {
      * @param mediaType the media type, may be {@code null}
      * @return this builder
      */
-    public Builder mediaType(MediaType mediaType) {
+    public Builder mediaType(@Nullable MediaType mediaType) {
       this.mediaType = mediaType;
       return this;
     }
@@ -273,7 +278,7 @@ public final class ImageInfo extends FileInfo {
      * @param type the image type
      * @return this builder
      */
-    public Builder type(String type) {
+    public Builder type(@Nullable String type) {
       this.type = type;
       return this;
     }
@@ -317,7 +322,7 @@ public final class ImageInfo extends FileInfo {
      * @param title the title, may be {@code null}
      * @return this builder
      */
-    public Builder title(String title) {
+    public Builder title(@Nullable String title) {
       this.title = title;
       return this;
     }
@@ -328,7 +333,7 @@ public final class ImageInfo extends FileInfo {
      * @param description the description, may be {@code null}
      * @return this builder
      */
-    public Builder description(String description) {
+    public Builder description(@Nullable String description) {
       this.description = description;
       return this;
     }
@@ -339,7 +344,7 @@ public final class ImageInfo extends FileInfo {
      * @param copyright the copyright, may be {@code null}
      * @return this builder
      */
-    public Builder copyright(String copyright) {
+    public Builder copyright(@Nullable String copyright) {
       this.copyright = copyright;
       return this;
     }
@@ -350,7 +355,7 @@ public final class ImageInfo extends FileInfo {
      * @param digitalSourceType the digitalSourceType, may be {@code null}
      * @return this builder
      */
-    public Builder digitalSourceType(String digitalSourceType) {
+    public Builder digitalSourceType(@Nullable String digitalSourceType) {
       this.digitalSourceType = digitalSourceType;
       return this;
     }
@@ -361,7 +366,7 @@ public final class ImageInfo extends FileInfo {
      * @param vibrantColors the vibrant colors, may be {@code null}
      * @return this builder
      */
-    public Builder vibrantColors(VibrantColors vibrantColors) {
+    public Builder vibrantColors(@Nullable VibrantColors vibrantColors) {
       this.vibrantColors = vibrantColors;
       return this;
     }

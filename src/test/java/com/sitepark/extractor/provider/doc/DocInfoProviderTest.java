@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.DocInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.nio.file.Path;
 import java.util.Date;
 import org.apache.tika.metadata.Metadata;
@@ -17,7 +16,8 @@ import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+// Tika Metadata.set(Property, Date) only accepts java.util.Date
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "JavaUtilDate", "PMD.ReplaceJavaUtilDate"})
 class DocInfoProviderTest {
 
   private final DocInfoProvider factory = new DocInfoProvider();
@@ -34,7 +34,6 @@ class DocInfoProviderTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testIsSupportedWithNullType() {
     assertThrows(
         NullPointerException.class,
@@ -80,7 +79,6 @@ class DocInfoProviderTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testCreateWithNullMetadata() {
     assertThrows(
         NullPointerException.class,

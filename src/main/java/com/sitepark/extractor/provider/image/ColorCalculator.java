@@ -4,7 +4,9 @@ import com.sitepark.extractor.values.HslColor;
 import com.sitepark.extractor.values.RgbColor;
 import com.sitepark.extractor.values.SrgbColor;
 
-public class ColorCalculator {
+public final class ColorCalculator {
+
+  private ColorCalculator() {}
 
   public static HslColor toHsl(RgbColor rgb) {
     return toHsl(rgb.toSrgbColor());

@@ -14,6 +14,7 @@ import java.util.Set;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link FileInfoProvider} implementation that creates {@link DocInfo} objects for document
@@ -88,23 +89,24 @@ public class DocInfoProvider implements FileInfoProvider<DocInfo> {
         .build();
   }
 
-  private String getTitle(Metadata metadata) {
+  private @Nullable String getTitle(Metadata metadata) {
     return this.getFirstString(metadata, TikaCoreProperties.TITLE);
   }
 
-  private String getDescription(Metadata metadata) {
+  private @Nullable String getDescription(Metadata metadata) {
     return this.getFirstString(metadata, TikaCoreProperties.DESCRIPTION);
   }
 
-  private Long getCreationDate(Metadata metadata) {
+  private @Nullable Long getCreationDate(Metadata metadata) {
     return this.getDate(metadata, TikaCoreProperties.CREATED);
   }
 
-  private Long getLastModifiedDate(Metadata metadata) {
+  private @Nullable Long getLastModifiedDate(Metadata metadata) {
     return this.getDate(metadata, TikaCoreProperties.MODIFIED);
   }
 
-  private Long getDate(Metadata metadata, Property name) {
+  @SuppressWarnings({"JavaUtilDate", "PMD.ReplaceJavaUtilDate"}) // Tika API returns java.util.Date
+  private @Nullable Long getDate(Metadata metadata, Property name) {
     Date date = metadata.getDate(name);
     if (date == null) {
       return null;
@@ -112,7 +114,7 @@ public class DocInfoProvider implements FileInfoProvider<DocInfo> {
     return date.getTime();
   }
 
-  private String getFirstString(Metadata metadata, Property name) {
+  private @Nullable String getFirstString(Metadata metadata, Property name) {
 
     String[] value = metadata.getValues(name);
     if (value.length == 0) {
