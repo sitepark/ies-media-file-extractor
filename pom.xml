@@ -48,12 +48,14 @@
 
 	<properties>
 		<tika.version>3.3.1</tika.version>
-		<junit.version>6.1.0</junit.version>
-		<spotbugs.version>4.9.8</spotbugs.version>
+		<junit.version>6.1.3</junit.version>
 		<vips-ipc.version>2.1.0</vips-ipc.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>25</maven.compiler.release>
 		<gpg.skip>true</gpg.skip>
+		<errorprone.version>2.50.0</errorprone.version>
+		<nullaway.version>0.14.2</nullaway.version>
+		<pmd.version>7.28.0</pmd.version>
 	</properties>
 
 	<dependencyManagement>
@@ -90,6 +92,12 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.jspecify</groupId>
+			<artifactId>jspecify</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -142,14 +150,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
-			<version>${spotbugs.version}</version>
-			<scope>provided</scope>
-			<optional>true</optional>
-		</dependency>
-
 		<!-- Test-Dependencies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -179,7 +179,7 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.23.0</version>
+			<version>5.24.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -213,29 +213,72 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.15.0</version>
+				<version>3.16.0</version>
 				<configuration>
 					<compilerArgs>
-						<arg>-proc:none</arg>
+						<arg>-XDcompilePolicy=simple</arg>
+						<arg>--should-stop=ifError=FLOW</arg>
+						<arg>-Xplugin:ErrorProne -Xep:NullAway:ERROR -XepOpt:NullAway:JSpecifyMode=true -XepOpt:NullAway:AnnotatedPackages=com.sitepark</arg>
+						<!-- Treat every Error Prone / javac warning as a build error. -->
+						<arg>-Werror</arg>
 					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>com.google.errorprone</groupId>
+							<artifactId>error_prone_core</artifactId>
+							<version>${errorprone.version}</version>
+						</path>
+						<path>
+							<groupId>com.uber.nullaway</groupId>
+							<artifactId>nullaway</artifactId>
+							<version>${nullaway.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
+				<executions>
+					<!-- Test code: Error Prone on, NullAway off (tests pass null intentionally) -->
+					<execution>
+						<id>default-testCompile</id>
+						<configuration>
+							<compilerArgs combine.self="override">
+								<arg>-XDcompilePolicy=simple</arg>
+								<arg>--should-stop=ifError=FLOW</arg>
+								<arg>-Xplugin:ErrorProne -Xep:NullAway:OFF</arg>
+							</compilerArgs>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.5.1</version>
+			</plugin>
+			<plugin>
+				<!-- Provides the property ${org.mockito:mockito-core:jar} for the Mockito agent -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.11.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.6</version>
+				<version>3.6.0</version>
 				<configuration>
-					<argLine>-Duser.timezone=Europe/Berlin ${argLine}</argLine>
+					<!-- Load Mockito as agent, the JDK blocks its dynamic self-attach in the future -->
+					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
 					<consoleOutputReporter>
 						<disable>true</disable>
 					</consoleOutputReporter>
 					<statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
-						<theme>UNICODE</theme>
 						<hideResultsOnSuccess>true</hideResultsOnSuccess>
+						<theme>UNICODE</theme>
 					</statelessTestsetInfoReporter>
 				</configuration>
 				<dependencies>
@@ -263,6 +306,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.12.0</version>
+				<configuration>
+					<doclint>all,-missing</doclint>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -314,12 +360,12 @@
 						<configuration>
 							<rules>
 								<banDuplicatePomDependencyVersions/>
-								<requireMavenVersion>
-									<version>3.8</version>
-								</requireMavenVersion>
 								<requireJavaVersion>
 									<version>25</version>
 								</requireJavaVersion>
+								<requireMavenVersion>
+									<version>3.8</version>
+								</requireMavenVersion>
 							</rules>
 						</configuration>
 					</execution>
@@ -330,6 +376,7 @@
 						</goals>
 						<phase>none</phase>
 						<configuration>
+							<fail>true</fail>
 							<rules>
 								<requireReleaseDeps>
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
@@ -337,7 +384,6 @@
 								</requireReleaseDeps>
 								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
 							</rules>
-							<fail>true</fail>
 						</configuration>
 					</execution>
 				</executions>
@@ -360,12 +406,17 @@
 						<configuration>
 							<rules>
 								<rule>
-									<element>PACKAGE</element>
+									<element>BUNDLE</element>
 									<limits>
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.8</minimum>
+											<minimum>0.85</minimum>
+										</limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -384,24 +435,21 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.10.3</version>
 				<configuration>
-					<!-- define a language-specific format -->
 					<java>
-						<removeUnusedImports>
-							<engine>google-java-format</engine>
-						</removeUnusedImports>
-
 						<!-- apply a specific flavor of google-java-format and reflow long strings -->
 						<googleJavaFormat>
-							<version>1.31.0</version>
+							<version>1.36.1</version>
 							<style>GOOGLE</style>
 							<reflowLongStrings>true</reflowLongStrings>
 							<formatJavadoc>false</formatJavadoc>
 						</googleJavaFormat>
+						<removeUnusedImports>
+							<engine>google-java-format</engine>
+						</removeUnusedImports>
 					</java>
 					<pom>
-						<!-- These are the defaults, you can override if you want -->
 						<includes>
 							<include>pom.xml</include>
 						</includes>
@@ -412,38 +460,20 @@
 					</pom>
 				</configuration>
 				<executions>
+					<!-- Formats locally; skipped in the ci profile, so that the check below can fail -->
 					<execution>
-						<?m2e ignore?>
-						<id>spotless-check</id>
+						<id>spotless-apply</id>
 						<goals>
-							<goal>check</goal>
+							<goal>apply</goal>
 						</goals>
-						<phase>verify</phase>
+						<phase>process-sources</phase>
+						<configuration>
+							<skip>${spotless.apply.skip}</skip>
+						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.10.2.0</version>
-				<configuration>
-					<effort>Max</effort>
-					<threshold>Low</threshold>
-					<maxRank>20</maxRank>
-					<excludeFilterFile>spotbug-exclude-filter.xml</excludeFilterFile>
-				</configuration>
-				<!-- https://spotbugs.readthedocs.io/en/latest/maven.html -->
-				<dependencies>
-					<!-- overwrite dependency on spotbugs if you want to specify the version of
-                    spotbugs -->
-					<dependency>
-						<groupId>com.github.spotbugs</groupId>
-						<artifactId>spotbugs</artifactId>
-						<version>4.10.2</version>
-					</dependency>
-				</dependencies>
-				<executions>
 					<execution>
+						<id>spotless-check</id>
+						<?m2e ignore?>
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -456,15 +486,27 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.28.0</version>
 				<configuration>
+					<failOnViolation>true</failOnViolation>
+					<failurePriority>5</failurePriority>
+					<includeTests>true</includeTests>
+					<linkXRef>false</linkXRef>
+					<printFailingErrors>true</printFailingErrors>
 					<rulesets>
 						<ruleset>pmd-ruleset.xml</ruleset>
 					</rulesets>
-					<includeTests>true</includeTests>
-					<failOnViolation>true</failOnViolation>
-					<failurePriority>1</failurePriority>
-					<printFailingErrors>true</printFailingErrors>
-					<linkXRef>false</linkXRef>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sourceforge.pmd</groupId>
+						<artifactId>pmd-core</artifactId>
+						<version>${pmd.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>net.sourceforge.pmd</groupId>
+						<artifactId>pmd-java</artifactId>
+						<version>${pmd.version}</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<id>pmd</id>
@@ -478,6 +520,17 @@
 		</plugins>
 	</build>
 	<profiles>
+		<profile>
+			<id>ci</id>
+			<activation>
+				<property>
+					<name>env.CI</name>
+				</property>
+			</activation>
+			<properties>
+				<spotless.apply.skip>true</spotless.apply.skip>
+			</properties>
+		</profile>
 		<profile>
 			<id>publish-release</id>
 			<build>
