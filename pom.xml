@@ -272,7 +272,8 @@
 				<version>3.6.0</version>
 				<configuration>
 					<!-- Load Mockito as agent, the JDK blocks its dynamic self-attach in the future -->
-					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+					<!-- The expected metadata of the test files was extracted in this time zone -->
+					<argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar} -Duser.timezone=Europe/Berlin</argLine>
 					<consoleOutputReporter>
 						<disable>true</disable>
 					</consoleOutputReporter>
