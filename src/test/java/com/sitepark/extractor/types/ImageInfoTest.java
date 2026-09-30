@@ -8,17 +8,15 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods"})
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class ImageInfoTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEqualsContract() {
     EqualsVerifier.forClass(ImageInfo.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(ImageInfo.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
@@ -60,7 +58,6 @@ class ImageInfoTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void testToBuilder() {
     ImageInfo imageInfo =
         ImageInfo.builder().title("title").description("description").copyright("© 2024").build();

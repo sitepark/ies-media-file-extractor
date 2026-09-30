@@ -3,7 +3,6 @@ package com.sitepark.extractor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +23,6 @@ class ContentTypeDetectorTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testDetectWithNullPath() {
     ContentTypeDetector detector = new ContentTypeDetector();
     assertThrows(

@@ -3,8 +3,12 @@ package com.sitepark.extractor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 public record MediaType(
     @JsonProperty("type") String type,
@@ -22,7 +26,7 @@ public record MediaType(
     parameters = Map.copyOf(parameters);
   }
 
-  public static MediaType parse(String s) {
+  public static @Nullable MediaType parse(@Nullable String s) {
     if (s == null) {
       return null;
     }
@@ -56,9 +60,7 @@ public record MediaType(
       return type + "/" + subtype;
     } else {
       StringBuilder builder = new StringBuilder();
-      builder.append(type);
-      builder.append('/');
-      builder.append(subtype);
+      builder.append(type).append('/').append(subtype);
       SortedMap<String, String> map = new TreeMap<>();
 
       for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -67,14 +69,10 @@ public record MediaType(
       }
 
       for (Map.Entry<String, String> entry : map.entrySet()) {
-        builder.append("; ");
-        builder.append(entry.getKey());
-        builder.append("=");
+        builder.append("; ").append(entry.getKey()).append('=');
         String value = entry.getValue();
         if (SPECIAL_OR_WHITESPACE.matcher(value).find()) {
-          builder.append('"');
-          builder.append(SPECIAL.matcher(value).replaceAll("\\\\$0"));
-          builder.append('"');
+          builder.append('"').append(SPECIAL.matcher(value).replaceAll("\\\\$0")).append('"');
         } else {
           builder.append(value);
         }

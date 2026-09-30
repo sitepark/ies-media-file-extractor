@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`ies-media-file-extractor` is a Java 21 library by Sitepark that extracts metadata and text content from media files (PDF, Office formats, OpenDocument, RTF) using Apache Tika. It is a stateless library with no runtime configuration.
+`ies-media-file-extractor` is a Java 25 library by Sitepark that extracts metadata and text content from media files (PDF, Office formats, OpenDocument, RTF) using Apache Tika. It is a stateless library with no runtime configuration.
 
 ## Common Commands
 
@@ -18,7 +18,6 @@ mvn test -Dtest=ExtractorTest#testIfSupported    # Run single test method
 # Code quality
 mvn spotless:apply        # Auto-format code (run before committing)
 mvn spotless:check        # Check formatting without applying
-mvn spotbugs:check        # SpotBugs static analysis
 mvn pmd:check             # PMD analysis
 mvn jacoco:report         # Generate coverage report (target/site/jacoco/)
 ```
@@ -58,7 +57,7 @@ When adding support for a new file format: add a sample file + `.expected.json` 
 
 ## Code Quality Configuration
 
-- **SpotBugs**: Max effort, Low threshold; exclusions in `spotbugs-exclude-filter.xml`
-- **PMD**: Custom ruleset in `pmd-ruleset.xml`; blocks on priority-1 violations
+- **Error Prone and NullAway** (JSpecify mode) run during compilation; `-Werror` turns every warning into an error. Code is `@NullMarked`; nullable points use `org.jspecify.annotations.Nullable`
+- **PMD**: Custom ruleset in `pmd-ruleset.xml`; fails the build on any violation
 - **Spotless**: Google Java Format 1.31 — always run `spotless:apply` before committing
-- **Enforcer**: Java 21 and Maven 3.8+ are required (build will fail otherwise)
+- **Enforcer**: Java 25 and Maven 3.8+ are required (build will fail otherwise)

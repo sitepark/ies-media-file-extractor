@@ -1,17 +1,23 @@
 package com.sitepark.extractor.provider.image;
 
-import com.sitepark.extractor.values.*;
+import com.sitepark.extractor.values.ColorPalette;
+import com.sitepark.extractor.values.ColorPaletteEntry;
+import com.sitepark.extractor.values.HslColor;
+import com.sitepark.extractor.values.RgbColor;
+import com.sitepark.extractor.values.VibrantColors;
+import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 public final class VibrantColorAnalyser {
 
   private final ColorPalette palette;
-  private ColorPaletteEntry highestPopulationSwatch;
-  private ColorPaletteEntry vibrant;
-  private ColorPaletteEntry muted;
-  private ColorPaletteEntry darkVibrant;
-  private ColorPaletteEntry darkMuted;
-  private ColorPaletteEntry lightVibrant;
-  private ColorPaletteEntry lightMuted;
+  private @Nullable ColorPaletteEntry highestPopulationSwatch;
+  private @Nullable ColorPaletteEntry vibrant;
+  private @Nullable ColorPaletteEntry muted;
+  private @Nullable ColorPaletteEntry darkVibrant;
+  private @Nullable ColorPaletteEntry darkMuted;
+  private @Nullable ColorPaletteEntry lightVibrant;
+  private @Nullable ColorPaletteEntry lightMuted;
 
   private static final double TARGET_DARK_LUMA = 0.26;
   private static final double MAX_DARK_LUMA = 0.45;
@@ -105,13 +111,15 @@ public final class VibrantColorAnalyser {
     this.generateEmptySwatches();
   }
 
-  private ColorPaletteEntry findColor(
+  private @Nullable ColorPaletteEntry findColor(
       double targetLuma,
       double minLuma,
       double maxLuma,
       double targetSaturation,
       double minSaturation,
       double maxSaturation) {
+    final ColorPaletteEntry highest =
+        Objects.requireNonNull(this.highestPopulationSwatch, "highestPopulationSwatch");
     ColorPaletteEntry max = null;
     double maxValue = 0f;
     for (ColorPaletteEntry entry : this.palette.colors()) {
@@ -126,12 +134,7 @@ public final class VibrantColorAnalyser {
           && !this.isAlreadySelected(entry)) {
         double thisValue =
             ColorCalculator.createComparisonValue(
-                sat,
-                targetSaturation,
-                luma,
-                targetLuma,
-                entry.pixelCount(),
-                this.highestPopulationSwatch.pixelCount());
+                sat, targetSaturation, luma, targetLuma, entry.pixelCount(), highest.pixelCount());
         if (max == null || thisValue > maxValue) {
           max = entry;
           maxValue = thisValue;
@@ -143,28 +146,21 @@ public final class VibrantColorAnalyser {
 
   /** Try and generate any missing swatches from the swatches we did find. */
   private void generateEmptySwatches() {
-    if (this.vibrant == null) {
-      // If we do not have a vibrant color...
-      if (this.darkVibrant != null) {
-        // ...but we do have a dark vibrant, generate the value by
-        // modifying the luma
-        HslColor hsl = ColorCalculator.toHsl(this.darkVibrant.color());
-        HslColor newHslColor = new HslColor(hsl.hue(), hsl.lightness(), TARGET_NORMAL_LUMA * 100);
-        RgbColor newColor = ColorCalculator.toRgb(newHslColor);
-        this.vibrant = new ColorPaletteEntry(newColor, 0);
-      }
+    // If we do not have a vibrant color but we do have a dark vibrant, generate the value by
+    // modifying the luma
+    if (this.vibrant == null && this.darkVibrant != null) {
+      HslColor hsl = ColorCalculator.toHsl(this.darkVibrant.color());
+      HslColor newHslColor = new HslColor(hsl.hue(), hsl.lightness(), TARGET_NORMAL_LUMA * 100);
+      RgbColor newColor = ColorCalculator.toRgb(newHslColor);
+      this.vibrant = new ColorPaletteEntry(newColor, 0);
     }
-    if (this.darkVibrant == null) {
-      // If we do not have a dark vibrant color...
-      if (this.vibrant != null) {
-        // ...but we do have a vibrant, generate the value by modifying
-        // the luma
-        final HslColor hsl = ColorCalculator.toHsl(this.vibrant.color());
-        final HslColor newHslColor =
-            new HslColor(hsl.hue(), hsl.lightness(), TARGET_DARK_LUMA * 100);
-        RgbColor newColor = ColorCalculator.toRgb(newHslColor);
-        this.darkVibrant = new ColorPaletteEntry(newColor, 0);
-      }
+    // If we do not have a dark vibrant color but we do have a vibrant, generate the value by
+    // modifying the luma
+    if (this.darkVibrant == null && this.vibrant != null) {
+      final HslColor hsl = ColorCalculator.toHsl(this.vibrant.color());
+      final HslColor newHslColor = new HslColor(hsl.hue(), hsl.lightness(), TARGET_DARK_LUMA * 100);
+      RgbColor newColor = ColorCalculator.toRgb(newHslColor);
+      this.darkVibrant = new ColorPaletteEntry(newColor, 0);
     }
   }
 
@@ -188,34 +184,36 @@ public final class VibrantColorAnalyser {
     return new RgbColor((int) Math.round(r), (int) Math.round(g), (int) Math.round(b));
   }
 
-  public RgbColor getDominant() {
+  public @Nullable RgbColor getDominant() {
     return this.highestPopulationSwatch != null ? this.highestPopulationSwatch.color() : null;
   }
 
-  public RgbColor getVibrant() {
+  public @Nullable RgbColor getVibrant() {
     return this.vibrant != null ? this.vibrant.color() : null;
   }
 
-  public RgbColor getLightVibrant() {
+  public @Nullable RgbColor getLightVibrant() {
     return this.lightVibrant != null ? this.lightVibrant.color() : null;
   }
 
-  public RgbColor getDarkVibrant() {
+  public @Nullable RgbColor getDarkVibrant() {
     return this.darkVibrant != null ? this.darkVibrant.color() : null;
   }
 
-  public RgbColor getMuted() {
+  public @Nullable RgbColor getMuted() {
     return this.muted != null ? this.muted.color() : null;
   }
 
-  public RgbColor getLightMuted() {
+  public @Nullable RgbColor getLightMuted() {
     return this.lightMuted != null ? this.lightMuted.color() : null;
   }
 
-  public RgbColor getDarkMuted() {
+  public @Nullable RgbColor getDarkMuted() {
     return this.darkMuted != null ? this.darkMuted.color() : null;
   }
 
+  // swatches are compared by identity on purpose
+  @SuppressWarnings({"ReferenceEquality", "PMD.CompareObjectsWithEquals"})
   private boolean isAlreadySelected(ColorPaletteEntry entry) {
     return this.vibrant == entry
         || this.darkVibrant == entry

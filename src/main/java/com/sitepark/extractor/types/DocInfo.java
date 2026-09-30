@@ -7,6 +7,7 @@ import com.sitepark.extractor.FileInfo;
 import com.sitepark.extractor.MediaType;
 import java.io.Serial;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Immutable value object representing document metadata and extracted text content.
@@ -14,24 +15,27 @@ import java.util.Objects;
  * <p>Use {@link #builder()} to construct instances and {@link #toBuilder()} to create modified
  * copies. Supports JSON serialization and deserialization via Jackson.
  */
-@SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
+// TooManyMethods: value object with one accessor per property plus builder
+@SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName", "PMD.TooManyMethods"})
 @JsonDeserialize(builder = DocInfo.Builder.class)
 public final class DocInfo extends FileInfo {
 
   @Serial private static final long serialVersionUID = 1L;
 
-  private final MediaType mediaType;
+  private final @Nullable MediaType mediaType;
 
-  private final String title;
+  private final @Nullable String title;
 
-  private final String description;
+  private final @Nullable String description;
 
-  private final Long creationDate;
+  private final @Nullable Long creationDate;
 
-  private final Long lastModificationDate;
+  private final @Nullable Long lastModificationDate;
 
-  private final String extractedContent;
+  private final @Nullable String extractedContent;
 
+  // LawOfDemeter: copying the builder state is the purpose of this constructor
+  @SuppressWarnings("PMD.LawOfDemeter")
   private DocInfo(Builder builder) {
     this.mediaType = builder.mediaType;
     this.title = builder.title;
@@ -47,7 +51,7 @@ public final class DocInfo extends FileInfo {
    * @return the media type, or {@code null}
    */
   @JsonProperty
-  public MediaType mediaType() {
+  public @Nullable MediaType mediaType() {
     return this.mediaType;
   }
 
@@ -57,7 +61,7 @@ public final class DocInfo extends FileInfo {
    * @return the title, or {@code null}
    */
   @JsonProperty
-  public String title() {
+  public @Nullable String title() {
     return this.title;
   }
 
@@ -67,7 +71,7 @@ public final class DocInfo extends FileInfo {
    * @return the description, or {@code null}
    */
   @JsonProperty
-  public String description() {
+  public @Nullable String description() {
     return this.description;
   }
 
@@ -78,7 +82,7 @@ public final class DocInfo extends FileInfo {
    * @return the creation date in epoch milliseconds, or {@code null}
    */
   @JsonProperty
-  public Long creationDate() {
+  public @Nullable Long creationDate() {
     return this.creationDate;
   }
 
@@ -89,7 +93,7 @@ public final class DocInfo extends FileInfo {
    * @return the last-modification date in epoch milliseconds, or {@code null}
    */
   @JsonProperty
-  public Long lastModificationDate() {
+  public @Nullable Long lastModificationDate() {
     return this.lastModificationDate;
   }
 
@@ -100,7 +104,7 @@ public final class DocInfo extends FileInfo {
    * @return the extracted content, or {@code null}
    */
   @JsonProperty
-  public String extractedContent() {
+  public @Nullable String extractedContent() {
     return this.extractedContent;
   }
 
@@ -167,20 +171,22 @@ public final class DocInfo extends FileInfo {
   @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
 
-    private MediaType mediaType;
+    private @Nullable MediaType mediaType;
 
-    private String title;
+    private @Nullable String title;
 
-    private String description;
+    private @Nullable String description;
 
-    private Long creationDate;
+    private @Nullable Long creationDate;
 
-    private Long lastModificationDate;
+    private @Nullable Long lastModificationDate;
 
-    private String extractedContent;
+    private @Nullable String extractedContent;
 
     private Builder() {}
 
+    // LawOfDemeter: copying the value object state is the purpose of this constructor
+    @SuppressWarnings("PMD.LawOfDemeter")
     private Builder(DocInfo docInfo) {
       this.mediaType = docInfo.mediaType;
       this.title = docInfo.title;
@@ -196,7 +202,7 @@ public final class DocInfo extends FileInfo {
      * @param mediaType the media type, may be {@code null}
      * @return this builder
      */
-    public Builder mediaType(MediaType mediaType) {
+    public Builder mediaType(@Nullable MediaType mediaType) {
       this.mediaType = mediaType;
       return this;
     }
@@ -207,7 +213,7 @@ public final class DocInfo extends FileInfo {
      * @param title the title, may be {@code null}
      * @return this builder
      */
-    public Builder title(String title) {
+    public Builder title(@Nullable String title) {
       this.title = title;
       return this;
     }
@@ -218,7 +224,7 @@ public final class DocInfo extends FileInfo {
      * @param description the description, may be {@code null}
      * @return this builder
      */
-    public Builder description(String description) {
+    public Builder description(@Nullable String description) {
       this.description = description;
       return this;
     }
@@ -230,7 +236,7 @@ public final class DocInfo extends FileInfo {
      *     null}
      * @return this builder
      */
-    public Builder creationDate(Long creationDate) {
+    public Builder creationDate(@Nullable Long creationDate) {
       this.creationDate = creationDate;
       return this;
     }
@@ -242,7 +248,7 @@ public final class DocInfo extends FileInfo {
      *     may be {@code null}
      * @return this builder
      */
-    public Builder lastModificationDate(Long lastModificationDate) {
+    public Builder lastModificationDate(@Nullable Long lastModificationDate) {
       this.lastModificationDate = lastModificationDate;
       return this;
     }
@@ -254,7 +260,7 @@ public final class DocInfo extends FileInfo {
      * @return this builder
      */
     @SuppressWarnings("PMD.NullAssignment")
-    public Builder extractedContent(String extractedContent) {
+    public Builder extractedContent(@Nullable String extractedContent) {
       if ((extractedContent == null) || extractedContent.isBlank()) {
         this.extractedContent = null;
       } else {

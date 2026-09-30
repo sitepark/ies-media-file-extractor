@@ -15,12 +15,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-class VibrantColorsReport {
+final class VibrantColorsReport {
+
+  private static final String DIV_END = "</div>%n";
 
   private static final Path IMAGES_DIR = Paths.get("src/test/resources/files/images");
   private static final String EXPECTED_SUFFIX = ".expected.json";
   private static final Path REPORT_FILE = Paths.get("target/vibrant-colors-report.html");
 
+  private VibrantColorsReport() {}
+
+  @SuppressWarnings("PMD.SystemPrintln") // tells the developer where the report was written
   static void generate() throws IOException {
     JsonMapper mapper = new JsonMapper();
     List<ImageEntry> entries = new ArrayList<>();
@@ -113,8 +118,9 @@ class VibrantColorsReport {
             + " onerror=\"this.style.display='none';"
             + "this.parentElement.innerHTML='<div class=\\'card-img-missing\\'>kein Vorschaubild"
             + "</div>';\">"
-            + "</div>%n",
-        imgSrc, filename);
+            + DIV_END,
+        imgSrc,
+        filename);
     out.printf("<div class=\"card-body\">%n");
     out.printf("<div class=\"card-title\">%s</div>%n", filename);
     out.printf(
@@ -124,7 +130,7 @@ class VibrantColorsReport {
     if (info.vibrantColors() != null) {
       out.printf("<div class=\"swatches\">%n");
       writeSwatches(out, info.vibrantColors());
-      out.printf("</div>%n");
+      out.printf(DIV_END);
     } else {
       out.printf("<div class=\"no-colors\">keine Farbanalyse</div>%n");
     }
@@ -150,7 +156,7 @@ class VibrantColorsReport {
               + "<span class=\"swatch-box\" style=\"background:#eee\"></span>"
               + "<span class=\"swatch-label\">%s</span>"
               + "<span class=\"swatch-hex\">–</span>"
-              + "</div>%n",
+              + DIV_END,
           label);
     } else {
       String hex = String.format("#%02X%02X%02X", color.red(), color.green(), color.blue());
@@ -160,8 +166,10 @@ class VibrantColorsReport {
               + "<span class=\"swatch-box\" style=\"background:%s\"></span>"
               + "<span class=\"swatch-label\">%s</span>"
               + "<span class=\"swatch-hex\">%s</span>"
-              + "</div>%n",
-          rgb, label, hex);
+              + DIV_END,
+          rgb,
+          label,
+          hex);
     }
   }
 

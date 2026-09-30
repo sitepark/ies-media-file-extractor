@@ -1,6 +1,5 @@
 package com.sitepark.extractor;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.StringWriter;
 import org.apache.tika.sax.ToTextContentHandler;
 import org.xml.sax.SAXException;
@@ -24,7 +23,6 @@ public class ContentExtractorHandler extends ToTextContentHandler {
    * @param writer the writer to which extracted characters are appended
    * @param writeLimit the maximum number of characters to write; use {@code -1} for no limit
    */
-  @SuppressFBWarnings("EI_EXPOSE_REP2")
   public ContentExtractorHandler(StringWriter writer, int writeLimit) {
     super(writer);
     this.writer = writer;

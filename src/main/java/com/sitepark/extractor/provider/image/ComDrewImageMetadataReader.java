@@ -13,7 +13,6 @@ import com.drew.metadata.xmp.XmpDirectory;
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Reads IPTC metadata (title, description, copyright) and the XMP digital source type from image
@@ -37,6 +37,8 @@ public class ComDrewImageMetadataReader {
 
   static final String DIGITAL_SOURCE_TYPE = "DigitalSourceType";
 
+  private static final String SVG_XML_SUBTYPE = "svg+xml";
+
   public void applyData(Path path, MediaType mediaType, ImageInfo.Builder builder)
       throws ExtractionException {
     ReaderResult result = this.readImageMetadata(path);
@@ -44,46 +46,12 @@ public class ComDrewImageMetadataReader {
   }
 
   void applyData(ReaderResult result, MediaType mediaType, ImageInfo.Builder builder) {
+    this.applyType(result, mediaType, builder);
+
     Collection<IptcDirectory> iptcDirectories =
         result.metadata().getDirectoriesOfType(IptcDirectory.class);
-
-    if (result.fileType() != FileType.Unknown) {
-      builder.type(result.fileType().getName().toLowerCase(Locale.ROOT));
-    } else if (mediaType.subtype().equals("svg+xml")) {
-      builder.type("svg");
-    } else {
-      builder.type(mediaType.subtype().toLowerCase(Locale.ROOT));
-    }
-
     for (IptcDirectory iptc : iptcDirectories) {
-      String iptcCopyright = iptc.getDescription(IptcDirectory.TAG_COPYRIGHT_NOTICE);
-      iptcCopyright = this.normalizeString(iptcCopyright);
-      if (iptcCopyright != null && !iptcCopyright.isEmpty()) {
-        builder.copyright(iptcCopyright);
-      }
-
-      String title = null;
-      String iptcHeadline = iptc.getDescription(IptcDirectory.TAG_HEADLINE);
-      iptcHeadline = this.normalizeString(iptcHeadline);
-      if (iptcHeadline != null && !iptcHeadline.isEmpty()) {
-        title = iptcHeadline;
-      }
-      if (title == null) {
-        String iptcTitle = iptc.getDescription(IptcDirectory.TAG_OBJECT_NAME);
-        iptcTitle = this.normalizeString(iptcTitle);
-        if (iptcTitle != null && !iptcTitle.isEmpty()) {
-          title = iptcTitle;
-        }
-      }
-      if (title != null) {
-        builder.title(title);
-      }
-
-      String iptcCaptionAbstract = iptc.getDescription(IptcDirectory.TAG_CAPTION);
-      iptcCaptionAbstract = this.normalizeMultiLineString(iptcCaptionAbstract);
-      if (iptcCaptionAbstract != null && !iptcCaptionAbstract.isEmpty()) {
-        builder.description(iptcCaptionAbstract);
-      }
+      this.applyIptcData(iptc, builder);
     }
 
     for (XmpDirectory xmp : result.metadata().getDirectoriesOfType(XmpDirectory.class)) {
@@ -94,7 +62,41 @@ public class ComDrewImageMetadataReader {
     }
   }
 
-  private String readDigitalSourceType(XmpDirectory xmp) {
+  private void applyType(ReaderResult result, MediaType mediaType, ImageInfo.Builder builder) {
+    if (result.fileType() != FileType.Unknown) {
+      builder.type(result.fileType().getName().toLowerCase(Locale.ROOT));
+    } else if (SVG_XML_SUBTYPE.equals(mediaType.subtype())) {
+      builder.type("svg");
+    } else {
+      builder.type(mediaType.subtype().toLowerCase(Locale.ROOT));
+    }
+  }
+
+  private void applyIptcData(IptcDirectory iptc, ImageInfo.Builder builder) {
+    String iptcCopyright =
+        this.normalizeString(iptc.getDescription(IptcDirectory.TAG_COPYRIGHT_NOTICE));
+    if (iptcCopyright != null && !iptcCopyright.isEmpty()) {
+      builder.copyright(iptcCopyright);
+    }
+
+    String title = this.normalizeString(iptc.getDescription(IptcDirectory.TAG_HEADLINE));
+    if (title == null || title.isEmpty()) {
+      title = this.normalizeString(iptc.getDescription(IptcDirectory.TAG_OBJECT_NAME));
+    }
+    if (title != null && !title.isEmpty()) {
+      builder.title(title);
+    }
+
+    String iptcCaptionAbstract =
+        this.normalizeMultiLineString(iptc.getDescription(IptcDirectory.TAG_CAPTION));
+    if (iptcCaptionAbstract != null && !iptcCaptionAbstract.isEmpty()) {
+      builder.description(iptcCaptionAbstract);
+    }
+  }
+
+  // chained access is dictated by the XMP library API
+  @SuppressWarnings("PMD.LawOfDemeter")
+  private @Nullable String readDigitalSourceType(XmpDirectory xmp) {
     try {
       return xmp.getXMPMeta().getPropertyString(IPTC_EXT_NAMESPACE, DIGITAL_SOURCE_TYPE);
     } catch (XMPException e) {
@@ -106,7 +108,7 @@ public class ComDrewImageMetadataReader {
 
     try (InputStream inputStream = Files.newInputStream(path)) {
       ReaderResult result = this.readImageMetadata(inputStream, Files.size(path));
-      (new FileSystemMetadataReader()).read(path.toFile(), result.metadata());
+      new FileSystemMetadataReader().read(path.toFile(), result.metadata());
       return result;
     } catch (IOException | ImageProcessingException e) {
       throw new ExtractionException("Unable to read image metadata", e);
@@ -117,8 +119,8 @@ public class ComDrewImageMetadataReader {
   private ReaderResult readImageMetadata(@NotNull InputStream inputStream, long streamLength)
       throws ImageProcessingException, IOException {
     BufferedInputStream bufferedInputStream =
-        inputStream instanceof BufferedInputStream
-            ? (BufferedInputStream) inputStream
+        inputStream instanceof BufferedInputStream buffered
+            ? buffered
             : new BufferedInputStream(inputStream);
     FileType fileType = FileTypeDetector.detectFileType(bufferedInputStream);
     if (fileType == FileType.Unknown) {
@@ -131,37 +133,38 @@ public class ComDrewImageMetadataReader {
     return new ReaderResult(fileType, metadata);
   }
 
-  private String normalizeString(String s) {
+  private @Nullable String normalizeString(@Nullable String s) {
     if (s == null) {
-      return s;
+      return null;
     }
-    // Replace invalid Character
-    s = s.replaceAll("\\p{C}", "");
-    s = s.trim();
-    return s;
+    return this.stripInvalidCharacters(s);
   }
 
-  private String normalizeMultiLineString(String s) {
+  private String stripInvalidCharacters(String s) {
+    // Replace invalid Character
+    return s.replaceAll("\\p{C}", "").trim();
+  }
+
+  private @Nullable String normalizeMultiLineString(@Nullable String s) {
 
     if (s == null) {
-      return s;
+      return null;
     }
 
-    BufferedReader lineReader = new BufferedReader(new StringReader(s));
-    String line = null;
-    try {
+    try (BufferedReader lineReader = new BufferedReader(new StringReader(s))) {
       List<String> lines = new ArrayList<>();
-      while ((line = lineReader.readLine()) != null) {
-        lines.add(this.normalizeString(line));
+      String line = lineReader.readLine();
+      while (line != null) {
+        lines.add(this.stripInvalidCharacters(line));
+        line = lineReader.readLine();
       }
       return String.join("\n", lines);
     } catch (IOException e) {
-      return this.normalizeString(s);
+      return this.stripInvalidCharacters(s);
     }
   }
 
   protected record ReaderResult(FileType fileType, com.drew.metadata.Metadata metadata) {
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     @Override
     public com.drew.metadata.Metadata metadata() {
       return this.metadata;

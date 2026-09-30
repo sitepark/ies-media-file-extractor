@@ -11,7 +11,6 @@ import static org.mockito.Mockito.verify;
 import com.sitepark.extractor.ExtractionException;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.types.ImageInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.nio.file.Path;
 import org.apache.tika.metadata.Metadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,14 +19,13 @@ import org.junit.jupiter.api.Test;
 class ImageInfoProviderTest {
 
   private ComDrewImageMetadataReader comDrewImageMetadataReader;
-  private VipsExtractor vipsExtractor;
   private ImageInfoProvider provider;
 
   @BeforeEach
   void setUp() {
     this.comDrewImageMetadataReader = mock();
-    this.vipsExtractor = mock();
-    this.provider = new ImageInfoProvider(this.comDrewImageMetadataReader, this.vipsExtractor);
+    VipsExtractor vipsExtractor = mock();
+    this.provider = new ImageInfoProvider(this.comDrewImageMetadataReader, vipsExtractor);
   }
 
   @Test
@@ -42,7 +40,6 @@ class ImageInfoProviderTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testIsSupportedWithNullType() {
     assertThrows(
         NullPointerException.class,
@@ -59,7 +56,6 @@ class ImageInfoProviderTest {
   }
 
   @Test
-  @SuppressFBWarnings("NP_NULL_PARAM_DEREF_NONVIRTUAL")
   void testCreateWithNullMetadata() {
     assertThrows(
         NullPointerException.class,

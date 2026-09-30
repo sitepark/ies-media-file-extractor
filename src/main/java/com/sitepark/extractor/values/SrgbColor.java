@@ -1,20 +1,15 @@
 package com.sitepark.extractor.values;
 
 public record SrgbColor(double red, double green, double blue) {
-  public SrgbColor(double red, double green, double blue) {
-    if (!(red < (double) 0.0F)
-        && !(red > (double) 1.0F)
-        && !(green < (double) 0.0F)
-        && !(green > (double) 1.0F)
-        && !(blue < (double) 0.0F)
-        && !(blue > (double) 1.0F)) {
-      this.red = red;
-      this.green = green;
-      this.blue = blue;
-    } else {
+  public SrgbColor {
+    if (isOutOfRange(red) || isOutOfRange(green) || isOutOfRange(blue)) {
       throw new IllegalArgumentException(
           "srgb values have to range from 0-1, given (" + red + ", " + green + ", " + blue + ")");
     }
+  }
+
+  private static boolean isOutOfRange(double value) {
+    return value < 0.0 || value > 1.0;
   }
 
   public static SrgbColor ofRgbColor(int red, int green, int blue) {
