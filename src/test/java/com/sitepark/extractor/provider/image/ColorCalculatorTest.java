@@ -77,4 +77,24 @@ class ColorCalculatorTest {
         1e-9,
         "weighted mean should be 1/3 for (1,w=1) and (0,w=2)");
   }
+
+  @Test
+  void testToHslLightness() {
+    // rgb(0, 0, 200): max = 200/255, min = 0 -> lightness = (max + min) / 2
+    HslColor hsl = ColorCalculator.toHsl(new RgbColor(0, 0, 200));
+    assertEquals(200.0 / 255 / 2 * 100, hsl.lightness(), 0.0001, "unexpected lightness");
+  }
+
+  @Test
+  void testToHslSaturation() {
+    // rgb(0, 0, 200): lightness <= 0.5 -> saturation = (max - min) / (max + min) = 100 %
+    HslColor hsl = ColorCalculator.toHsl(new RgbColor(0, 0, 200));
+    assertEquals(100.0, hsl.saturation(), 0.0001, "unexpected saturation");
+  }
+
+  @Test
+  void testToHslAndBackToRgb() {
+    RgbColor rgb = new RgbColor(203, 170, 73);
+    assertEquals(rgb, ColorCalculator.toRgb(ColorCalculator.toHsl(rgb)), "unexpected round trip");
+  }
 }

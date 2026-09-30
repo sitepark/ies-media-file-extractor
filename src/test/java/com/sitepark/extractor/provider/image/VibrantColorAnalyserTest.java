@@ -36,17 +36,18 @@ class VibrantColorAnalyserTest {
 
   @Test
   void testVibrant() {
-    assertEquals("#DAC5A9", toHex(this.colors.vibrant()), "unexpected vibrant color");
+    assertEquals("#C5584B", toHex(this.colors.vibrant()), "unexpected vibrant color");
   }
 
   @Test
   void testMuted() {
-    assertEquals("#593723", toHex(this.colors.muted()), "unexpected muted color");
+    // closer to the muted target saturation (0.3) than #6B7E6E
+    assertEquals("#A99E82", toHex(this.colors.muted()), "unexpected muted color");
   }
 
   @Test
   void testDarkVibrant() {
-    assertEquals("#A99E82", toHex(this.colors.darkVibrant()), "unexpected darkVibrant color");
+    assertEquals("#593723", toHex(this.colors.darkVibrant()), "unexpected darkVibrant color");
   }
 
   @Test
@@ -55,12 +56,13 @@ class VibrantColorAnalyserTest {
   }
 
   @Test
-  void testLightVibrantIsNull() {
-    assertNull(this.colors.lightVibrant(), "lightVibrant should be null");
+  void testLightVibrant() {
+    assertEquals("#DAC5A9", toHex(this.colors.lightVibrant()), "unexpected lightVibrant color");
   }
 
   @Test
   void testLightMutedIsNull() {
+    // the only candidate #A99E82 is already selected as muted
     assertNull(this.colors.lightMuted(), "lightMuted should be null");
   }
 
@@ -71,16 +73,24 @@ class VibrantColorAnalyserTest {
 
   @Test
   void testLightVibrantIsFoundAndBlocksLightMuted() {
-    // RgbColor(0,0,180): sat≈0.353 (in lightVibrant min range) and luma=1.0 (>0.7, fails vibrant)
-    // → assigned to lightVibrant; also qualifies for lightMuted so isAlreadySelected(entry) returns
-    // true, covering the lightVibrant==entry branch
+    // RgbColor(218,197,169): luma≈0.76 (>0.7, fails vibrant) and sat≈0.40 (vibrant min 0.35,
+    // muted max 0.4) → assigned to lightVibrant; also qualifies for lightMuted so
+    // isAlreadySelected(entry) returns true, covering the lightVibrant==entry branch
     ColorPalette palette =
-        new ColorPalette(List.of(new ColorPaletteEntry(new RgbColor(0, 0, 180), 10)));
+        new ColorPalette(List.of(new ColorPaletteEntry(new RgbColor(218, 197, 169), 10)));
     VibrantColors result = VibrantColorAnalyser.create(palette).analyse();
     assertEquals(
-        new RgbColor(0, 0, 180),
+        new RgbColor(218, 197, 169),
         result.lightVibrant(),
         "color with luma>0.7 should be selected as lightVibrant, not vibrant");
+  }
+
+  @Test
+  void testLightVibrantEntryIsNotLightMutedToo() {
+    ColorPalette palette =
+        new ColorPalette(List.of(new ColorPaletteEntry(new RgbColor(218, 197, 169), 10)));
+    VibrantColors result = VibrantColorAnalyser.create(palette).analyse();
+    assertNull(result.lightMuted(), "an entry selected as lightVibrant is not lightMuted too");
   }
 
   @Test
