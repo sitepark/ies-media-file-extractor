@@ -19,20 +19,20 @@
       "green" : 0,
       "blue" : 0
     },
-    "vibrant" : {
-      "red" : 0,
-      "green" : 0,
-      "blue" : 0
-    },
-    "darkVibrant" : {
-      "red" : 255,
-      "green" : 255,
-      "blue" : 255
+    "muted" : {
+      "red" : 144,
+      "green" : 144,
+      "blue" : 144
     },
     "darkMuted" : {
       "red" : 73,
       "green" : 73,
       "blue" : 73
+    },
+    "lightMuted" : {
+      "red" : 177,
+      "green" : 177,
+      "blue" : 177
     }
   }
 }

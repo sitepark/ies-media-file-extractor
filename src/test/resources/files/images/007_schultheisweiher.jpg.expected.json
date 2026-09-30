@@ -22,19 +22,19 @@
       "blue" : 251
     },
     "vibrant" : {
-      "red" : 220,
-      "green" : 227,
-      "blue" : 245
+      "red" : 137,
+      "green" : 141,
+      "blue" : 48
     },
     "muted" : {
-      "red" : 124,
-      "green" : 131,
-      "blue" : 43
+      "red" : 142,
+      "green" : 145,
+      "blue" : 93
     },
     "darkVibrant" : {
-      "red" : 174,
-      "green" : 184,
-      "blue" : 206
+      "red" : 98,
+      "green" : 102,
+      "blue" : 30
     },
     "darkMuted" : {
       "red" : 78,
@@ -45,6 +45,11 @@
       "red" : 234,
       "green" : 238,
       "blue" : 251
+    },
+    "lightMuted" : {
+      "red" : 174,
+      "green" : 184,
+      "blue" : 206
     }
   }
 }

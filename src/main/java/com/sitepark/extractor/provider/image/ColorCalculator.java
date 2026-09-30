@@ -27,7 +27,7 @@ public final class ColorCalculator {
       saturation = (max - min) / ((double) 2.0F - max - min);
     }
 
-    return new HslColor(hue, saturation * (double) 100.0F, lightness * (double) 100.0F);
+    return new HslColor(hue, lightness * (double) 100.0F, saturation * (double) 100.0F);
   }
 
   private static double getHue(SrgbColor srgb, double max, double min) {

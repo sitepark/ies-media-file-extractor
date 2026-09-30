@@ -20,19 +20,19 @@
       "blue" : 1
     },
     "vibrant" : {
-      "red" : 242,
-      "green" : 229,
-      "blue" : 217
+      "red" : 204,
+      "green" : 114,
+      "blue" : 39
     },
     "muted" : {
-      "red" : 98,
-      "green" : 82,
-      "blue" : 29
+      "red" : 176,
+      "green" : 120,
+      "blue" : 79
     },
     "darkVibrant" : {
-      "red" : 251,
-      "green" : 251,
-      "blue" : 250
+      "red" : 153,
+      "green" : 38,
+      "blue" : 0
     },
     "darkMuted" : {
       "red" : 46,
@@ -40,14 +40,14 @@
       "blue" : 26
     },
     "lightVibrant" : {
-      "red" : 241,
-      "green" : 202,
-      "blue" : 176
+      "red" : 240,
+      "green" : 182,
+      "blue" : 143
     },
     "lightMuted" : {
-      "red" : 110,
-      "green" : 151,
-      "blue" : 27
+      "red" : 210,
+      "green" : 178,
+      "blue" : 154
     }
   }
 }

@@ -150,7 +150,7 @@ public final class VibrantColorAnalyser {
     // modifying the luma
     if (this.vibrant == null && this.darkVibrant != null) {
       HslColor hsl = ColorCalculator.toHsl(this.darkVibrant.color());
-      HslColor newHslColor = new HslColor(hsl.hue(), hsl.lightness(), TARGET_NORMAL_LUMA * 100);
+      HslColor newHslColor = new HslColor(hsl.hue(), TARGET_NORMAL_LUMA * 100, hsl.saturation());
       RgbColor newColor = ColorCalculator.toRgb(newHslColor);
       this.vibrant = new ColorPaletteEntry(newColor, 0);
     }
@@ -158,7 +158,8 @@ public final class VibrantColorAnalyser {
     // modifying the luma
     if (this.darkVibrant == null && this.vibrant != null) {
       final HslColor hsl = ColorCalculator.toHsl(this.vibrant.color());
-      final HslColor newHslColor = new HslColor(hsl.hue(), hsl.lightness(), TARGET_DARK_LUMA * 100);
+      final HslColor newHslColor =
+          new HslColor(hsl.hue(), TARGET_DARK_LUMA * 100, hsl.saturation());
       RgbColor newColor = ColorCalculator.toRgb(newHslColor);
       this.darkVibrant = new ColorPaletteEntry(newColor, 0);
     }
