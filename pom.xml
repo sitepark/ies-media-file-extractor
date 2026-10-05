@@ -49,7 +49,7 @@
 	<properties>
 		<tika.version>3.3.1</tika.version>
 		<junit.version>6.1.3</junit.version>
-		<vips-ipc.version>2.1.0</vips-ipc.version>
+		<vips-ipc.version>2.2.0</vips-ipc.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>25</maven.compiler.release>
 		<gpg.skip>true</gpg.skip>
