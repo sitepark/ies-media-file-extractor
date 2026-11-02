@@ -55,7 +55,7 @@
 		<gpg.skip>true</gpg.skip>
 		<errorprone.version>2.51.0</errorprone.version>
 		<nullaway.version>0.14.3</nullaway.version>
-		<pmd.version>7.28.0</pmd.version>
+		<pmd.version>7.29.0</pmd.version>
 	</properties>
 
 	<dependencyManagement>
