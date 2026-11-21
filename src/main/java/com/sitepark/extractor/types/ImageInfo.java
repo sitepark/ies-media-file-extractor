@@ -1,8 +1,6 @@
 package com.sitepark.extractor.types;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.extractor.FileInfo;
 import com.sitepark.extractor.MediaType;
 import com.sitepark.extractor.values.VibrantColors;
@@ -18,7 +16,6 @@ import org.jspecify.annotations.Nullable;
  */
 // TooManyMethods: value object with one accessor per property plus builder
 @SuppressWarnings({"PMD.AvoidFieldNameMatchingMethodName", "PMD.TooManyMethods"})
-@JsonDeserialize(builder = ImageInfo.Builder.class)
 public final class ImageInfo extends FileInfo {
 
   @Serial private static final long serialVersionUID = 1L;
@@ -231,7 +228,6 @@ public final class ImageInfo extends FileInfo {
   }
 
   /** Builder for {@link ImageInfo}. */
-  @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
   public static final class Builder {
 
     private @Nullable MediaType mediaType;
