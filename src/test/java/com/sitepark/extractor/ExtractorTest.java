@@ -55,7 +55,26 @@ class ExtractorTest {
   @MethodSource("createImagesArguments")
   void testWithImagesArguments(Path path, ImageInfo expected) throws ExtractionException {
     ImageInfo imageInfo = (ImageInfo) this.extractor.extract(path);
-    assertEquals(expected, imageInfo, "unexpected imageInfo");
+    assertThat(imageInfo)
+        .as("unexpected imageInfo")
+        .usingRecursiveComparison()
+        .withEqualsForFieldsMatchingRegexes(
+            ExtractorTest::isWithinColorTolerance, COLOR_CHANNEL_FIELDS)
+        .isEqualTo(expected);
+  }
+
+  /**
+   * The vibrant colors depend on the decoders of the platform (libjpeg, libvips): different versions
+   * round a color channel differently.
+   */
+  private static final String COLOR_CHANNEL_FIELDS = "vibrantColors\\.\\w+\\.(red|green|blue)";
+
+  private static final int COLOR_TOLERANCE = 2;
+
+  private static boolean isWithinColorTolerance(Object actual, Object expected) {
+    return actual instanceof Integer a
+        && expected instanceof Integer e
+        && Math.abs(a - e) <= COLOR_TOLERANCE;
   }
 
   @Test

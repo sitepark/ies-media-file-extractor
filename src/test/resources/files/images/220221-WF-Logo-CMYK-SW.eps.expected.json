@@ -10,19 +10,29 @@
   "hasAlpha" : false,
   "vibrantColors" : {
     "average" : {
-      "red" : 40,
-      "green" : 35,
-      "blue" : 43
+      "red" : 189,
+      "green" : 188,
+      "blue" : 190
     },
     "dominant" : {
-      "red" : 40,
-      "green" : 35,
-      "blue" : 43
+      "red" : 255,
+      "green" : 255,
+      "blue" : 255
+    },
+    "muted" : {
+      "red" : 129,
+      "green" : 126,
+      "blue" : 130
     },
     "darkMuted" : {
-      "red" : 40,
-      "green" : 35,
-      "blue" : 43
+      "red" : 66,
+      "green" : 62,
+      "blue" : 68
+    },
+    "lightMuted" : {
+      "red" : 192,
+      "green" : 191,
+      "blue" : 193
     }
   }
 }
