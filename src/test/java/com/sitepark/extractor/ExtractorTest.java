@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sitepark.extractor.test.FileInfoTestParameter;
 import com.sitepark.extractor.types.DocInfo;
 import com.sitepark.extractor.types.ImageInfo;
@@ -29,6 +26,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnitTestShouldIncludeAssert"})
 class ExtractorTest {
@@ -193,7 +192,7 @@ class ExtractorTest {
   private static Stream<FileInfoTestParameter> createArguments(
       Path path, Class<? extends FileInfo> type) throws IOException {
 
-    ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
+    JsonMapper mapper = JsonMappers.builder().build();
 
     List<FileInfoTestParameter> arguments = new ArrayList<>();
 
@@ -220,8 +219,11 @@ class ExtractorTest {
   // Enable to create and update *.expected.json files
   @Disabled
   void createNewExpectedJsonFiles() throws IOException, ExtractionException {
-    ObjectMapper mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
-    mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+    JsonMapper mapper =
+        JsonMappers.builder()
+            .changeDefaultPropertyInclusion(
+                inclusion -> inclusion.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .build();
 
     for (Path dir :
         List.of(
@@ -236,7 +238,7 @@ class ExtractorTest {
             FileInfo fileInfo = this.extractor.extract(file);
             Path json = dir.resolve(file.getFileName() + EXPECTION_FILE_SUFFIX);
             mapper.writeValue(json.toFile(), fileInfo);
-          } catch (ExtractionException | IOException e) {
+          } catch (ExtractionException | JacksonException e) {
             LOGGER.log(
                 System.Logger.Level.WARNING, "Unable to create expected file for " + file, e);
           }

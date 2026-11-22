@@ -1,6 +1,5 @@
 package com.sitepark.extractor;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.sitepark.extractor.types.ImageInfo;
 import com.sitepark.extractor.values.RgbColor;
 import com.sitepark.extractor.values.VibrantColors;
@@ -14,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import tools.jackson.databind.json.JsonMapper;
 
 final class VibrantColorsReport {
 
@@ -27,7 +27,7 @@ final class VibrantColorsReport {
 
   @SuppressWarnings("PMD.SystemPrintln") // tells the developer where the report was written
   static void generate() throws IOException {
-    JsonMapper mapper = new JsonMapper();
+    JsonMapper mapper = JsonMappers.builder().build();
     List<ImageEntry> entries = new ArrayList<>();
     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(IMAGES_DIR)) {
       for (Path file : dirStream) {
